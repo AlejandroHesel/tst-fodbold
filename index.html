@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TST Fodbold - Rangliste</title>
+    <title>tst Fodbold - Rangliste</title>
     <style>
         :root {
             --primary-color: #1a5c1a;
@@ -78,9 +78,6 @@
 
         .point-badge span { color: var(--accent-color); font-weight: bold; }
 
-        /* ========================================
-           RANGLISTE
-        ======================================== */
         .leaderboard { max-width: 800px; margin: 20px auto; padding: 0 20px 40px; }
         .leaderboard h2 { text-align: center; margin-bottom: 20px; color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; }
 
@@ -107,14 +104,24 @@
         .rank-2 .rank { color: var(--silver); }
         .rank-3 .rank { color: var(--bronze); }
 
-        /* Spillerikon i rangliste */
         .card-avatar {
             width: 45px;
             height: 45px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--secondary-color);
-            background-color: #333;
+            flex-shrink: 0;
+        }
+
+        .avatar-placeholder {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.8);
+            font-weight: bold;
+            font-size: 1em;
+            flex-shrink: 0;
         }
 
         .player-info { flex: 1; }
@@ -123,9 +130,6 @@
         .player-points { font-size: 1.8em; font-weight: bold; color: var(--accent-color); }
         .points-label { font-size: 0.7em; color: #aaa; text-align: right; }
 
-        /* ========================================
-           KAMPHISTORIK
-        ======================================== */
         .match-history { max-width: 800px; margin: 20px auto; padding: 0 20px 40px; }
         .match-history h2 { text-align: center; margin-bottom: 20px; color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; }
 
@@ -168,9 +172,6 @@
         .result-draw { background-color: #5c4a1a; color: #FFC107; }
         .match-arrow { color: #aaa; font-size: 1.2em; }
 
-        /* ========================================
-           KAMP DETALJE
-        ======================================== */
         .match-detail { display: none; }
         .match-detail.active { display: block; }
 
@@ -204,9 +205,6 @@
         .match-detail-header .big-score { font-size: 3em; font-weight: bold; margin: 10px 0; }
         .match-detail-header .match-detail-date { color: #aaa; font-size: 0.9em; }
 
-        /* ========================================
-           FODBOLDBANE
-        ======================================== */
         .pitch-container { max-width: 500px; margin: 0 auto 10px; padding: 0 20px; }
 
         .pitch {
@@ -259,9 +257,6 @@
 
         .pitch-row:last-child { margin-bottom: 0; }
 
-        /* ========================================
-           SPILLERIKON PÅ BANEN
-        ======================================== */
         .pitch-player {
             display: flex;
             flex-direction: column;
@@ -286,14 +281,10 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--accent-color);
-            background-color: #1a5c1a;
             display: block;
         }
 
-        .pitch-player-img.sub-img {
-            border-color: #aaa;
-            opacity: 0.85;
-        }
+        .pitch-player-img.sub-img { border-color: #aaa; opacity: 0.85; }
 
         .shirt-points {
             position: absolute;
@@ -325,14 +316,7 @@
             border-radius: 3px;
         }
 
-        /* ========================================
-           TRÆNERTEAM BOKS
-        ======================================== */
-        .coaches-section {
-            max-width: 500px;
-            margin: 0 auto 10px;
-            padding: 0 20px;
-        }
+        .coaches-section { max-width: 500px; margin: 0 auto 10px; padding: 0 20px; }
 
         .coaches-box {
             background: rgba(0,0,0,0.3);
@@ -342,20 +326,9 @@
             text-align: center;
         }
 
-        .coaches-box h3 {
-            color: #aaa;
-            font-size: 0.75em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
+        .coaches-box h3 { color: #aaa; font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
 
-        .coaches-row {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+        .coaches-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
 
         .coach-item {
             display: flex;
@@ -374,21 +347,10 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #aaa;
-            background-color: #333;
         }
 
-        .coach-name {
-            font-size: 0.65em;
-            color: #ccc;
-            text-align: center;
-            background: rgba(0,0,0,0.5);
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
+        .coach-name { font-size: 0.65em; color: #ccc; text-align: center; background: rgba(0,0,0,0.5); padding: 2px 4px; border-radius: 3px; }
 
-        /* ========================================
-           INDSKIFTERE
-        ======================================== */
         .substitutes-section { max-width: 500px; margin: 10px auto 20px; padding: 0 20px; }
         .substitutes-section h3 { color: var(--accent-color); font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; text-align: center; }
 
@@ -403,9 +365,6 @@
             border: 1px dashed rgba(255,255,255,0.2);
         }
 
-        /* ========================================
-           POINT OVERSIGT PER KAMP
-        ======================================== */
         .match-points-section { max-width: 800px; margin: 0 auto 40px; padding: 0 20px; }
         .match-points-section h3 { color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-size: 0.9em; }
 
@@ -447,7 +406,7 @@
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid var(--accent-color);
-            background-color: #1a5c1a;
+            flex-shrink: 0;
         }
 
         .profile-info { flex: 1; }
@@ -474,24 +433,32 @@
 
         .stat-box.training-box { border-top-color: var(--accent-color); }
         .stat-box.match-box { border-top-color: var(--gold); }
-
         .stat-box-label { font-size: 0.8em; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
         .stat-box-value { font-size: 2em; font-weight: bold; color: var(--accent-color); margin-top: 5px; }
         .stat-box.match-box .stat-box-value { color: var(--gold); }
 
-        .profile-section {
-            max-width: 800px;
-            margin: 0 auto 20px;
-            padding: 0 20px;
+        .profile-section { max-width: 800px; margin: 0 auto 20px; padding: 0 20px; }
+        .profile-section h3 { color: var(--accent-color); font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+        .profile-contact-box {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .profile-section h3 {
-            color: var(--accent-color);
-            font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
+        .profile-contact-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95em;
         }
+
+        .profile-contact-icon { font-size: 1.1em; min-width: 24px; }
+        .profile-contact-label { color: #aaa; font-size: 0.8em; min-width: 80px; }
+        .profile-contact-value { color: #fff; }
 
         .profile-match-row {
             background-color: var(--card-color);
@@ -508,9 +475,6 @@
         .profile-match-date { font-size: 0.75em; color: #aaa; margin-top: 2px; }
         .profile-match-pts { font-size: 1.2em; font-weight: bold; color: var(--accent-color); }
 
-        /* ========================================
-           TABS OG SUBVIEWS
-        ======================================== */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .last-updated { text-align: center; color: #666; font-size: 0.8em; padding-bottom: 20px; }
@@ -541,7 +505,6 @@
         .match-subview { display: none; }
         .match-subview.active { display: block; }
 
-        /* Loading / Error */
         .loading {
             text-align: center;
             padding: 40px;
@@ -562,18 +525,7 @@
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
-
         .error { text-align: center; padding: 20px; color: #f44336; font-size: 0.9em; }
-
-        /* Placeholder avatar SVG baggrund */
-        .avatar-placeholder {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.5);
-            font-size: 1.4em;
-        }
     </style>
 </head>
 <body>
@@ -607,7 +559,6 @@
             <button class="subnav-button" onclick="showMatchSubview('match-history-view', this)">📋 Kampe</button>
         </div>
 
-        <!-- Kamprangliste -->
         <div id="match-leaderboard" class="match-subview active">
             <div class="points-guide">
                 <h3>⭐ Sådan optjenes point</h3>
@@ -619,7 +570,6 @@
             </div>
         </div>
 
-        <!-- Kamphistorik liste -->
         <div id="match-history-view" class="match-subview">
             <div class="match-history">
                 <h2>📋 Kamphistorik</h2>
@@ -627,7 +577,6 @@
             </div>
         </div>
 
-        <!-- Kamp detalje -->
         <div id="match-detail-view" class="match-detail">
             <button class="back-button" onclick="closeMatchDetail()">← Tilbage til kampe</button>
             <div class="match-detail-header">
@@ -635,27 +584,19 @@
                 <div class="big-score" id="detail-score"></div>
                 <div class="match-detail-date" id="detail-date"></div>
             </div>
-
-            <!-- Trænerteam -->
             <div class="coaches-section">
                 <div class="coaches-box">
                     <h3>👨‍💼 Trænerteam</h3>
                     <div class="coaches-row" id="detail-coaches"></div>
                 </div>
             </div>
-
-            <!-- Fodboldbane -->
             <div class="pitch-container">
                 <div class="pitch" id="detail-pitch"></div>
             </div>
-
-            <!-- Indskiftere -->
             <div class="substitutes-section">
                 <h3>🔄 Indskiftere</h3>
                 <div class="substitutes-row" id="detail-subs"></div>
             </div>
-
-            <!-- Point denne kamp -->
             <div class="match-points-section">
                 <h3>🏆 Point denne kamp</h3>
                 <div id="detail-points"></div>
@@ -663,11 +604,11 @@
         </div>
     </div>
 
-    <!-- SPILLERPROFIL (global - vises henover alt andet) -->
+    <!-- SPILLERPROFIL -->
     <div id="player-profile" class="player-profile">
-        <button class="back-button" id="profile-back-btn" onclick="closeProfile()">← Tilbage</button>
+        <button class="back-button" onclick="closeProfile()">← Tilbage</button>
         <div class="profile-header">
-            <img id="profile-img" class="profile-img" src="" alt="">
+            <div id="profile-img-wrap"></div>
             <div class="profile-info">
                 <div class="profile-name" id="profile-name"></div>
                 <div class="profile-position" id="profile-position"></div>
@@ -686,6 +627,11 @@
             </div>
         </div>
 
+        <div class="profile-section" id="profile-contact-section">
+            <h3>📋 Kontaktinfo</h3>
+            <div class="profile-contact-box" id="profile-contact"></div>
+        </div>
+
         <div class="profile-section">
             <h3>📅 Seneste kampe</h3>
             <div id="profile-matches"></div>
@@ -696,9 +642,10 @@
 
     <script>
         // ============================================================
-        // SHEET ID
+        // SHEET IDs
         // ============================================================
-        const SHEET_ID = '1Mi_8L6jj4FkoDsWNcrwRVZTnCldJrZJ22m8qd3tMYGo';
+        const SHEET_ID         = '1Mi_8L6jj4FkoDsWNcrwRVZTnCldJrZJ22m8qd3tMYGo';
+        const CONTACT_SHEET_ID = 'DIT_PRIVATE_SHEET_ID_HER'; // Erstat når du har oprettet det
 
         // ============================================================
         // POINT-REGLER
@@ -722,22 +669,21 @@
         // ============================================================
         // GLOBALE DATA
         // ============================================================
-        let players     = {};
-        let coaches     = [];
+        let players      = {};
+        let coaches      = [];
+        let contactData  = {};
         let trainingData = [];
-        let matchData   = [];
+        let matchData    = [];
         let matchHistory = [];
         let matchLineups = [];
         let matchPoints  = [];
-
-        // Hvilken view kom vi fra da vi åbnede profil?
         let profileReturnContext = null;
 
         // ============================================================
         // HJÆLPEFUNKTIONER
         // ============================================================
-        function fetchSheet(sheetName) {
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
+        function fetchSheet(sheetId, sheetName) {
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
             return fetch(url).then(r => r.text()).then(parseCSV);
         }
 
@@ -754,40 +700,45 @@
                 }
                 values.push(cur.trim());
                 const obj = {};
-                headers.forEach((h, i) => obj[h] = values[i] || '');
+                headers.forEach((h, i) => obj[h] = (values[i] || '').replace(/"/g, '').trim());
                 return obj;
             }).filter(row => Object.values(row).some(v => v !== ''));
         }
 
-        // Returnér billed-URL eller placeholder
         function avatarUrl(imageFile) {
             if (!imageFile || imageFile.trim() === '') return null;
             return `images/${imageFile}`;
         }
 
-        // Byg et rundt spillerbillede element - med fallback til initialer
-        function buildAvatar(imageFile, name, cssClass = '') {
-            const img = document.createElement('img');
-            img.className = cssClass;
-            img.alt = name;
+        // Byg avatar element - billede eller initialer
+        function buildAvatarEl(imageFile, name, cssClass, size = null) {
             const src = avatarUrl(imageFile);
             if (src) {
+                const img = document.createElement('img');
+                img.className = cssClass;
+                img.alt = name;
                 img.src = src;
-                img.onerror = () => replacWithInitials(img, name);
+                if (size) { img.style.width = size; img.style.height = size; }
+                img.onerror = function() {
+                    const div = makeInitialsEl(name, cssClass, size);
+                    this.parentNode?.replaceChild(div, this);
+                };
+                return img;
             } else {
-                replacWithInitials(img, name);
+                return makeInitialsEl(name, cssClass, size);
             }
-            return img;
         }
 
-        function replacWithInitials(img, name) {
-            // Erstat img med en div der viser initialer
+        function makeInitialsEl(name, cssClass, size = null) {
             const div = document.createElement('div');
-            div.className = img.className + ' avatar-placeholder';
-            div.style.width = img.style.width || '';
-            div.style.height = img.style.height || '';
+            div.className = cssClass + ' avatar-placeholder';
             div.textContent = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
-            if (img.parentNode) img.parentNode.replaceChild(div, img);
+            if (size) { div.style.width = size; div.style.height = size; }
+            return div;
+        }
+
+        function findPlayerId(name) {
+            return Object.entries(players).find(([, p]) => p.name === name)?.[0] || null;
         }
 
         // ============================================================
@@ -795,94 +746,124 @@
         // ============================================================
         async function loadAllData() {
             try {
-                // Players
-            const playersRaw = await fetchSheet('players');
-console.log('Players raw data:', playersRaw); // Debug linje
-playersRaw.forEach(p => {
-    const id = p.player_id?.trim();
-    const name = p.name?.trim();
-    if (!id || !name) return; // Spring over tomme rækker
-    if (p.role?.trim() === 'coach') {
-        coaches.push({
-            id,
-            name,
-            nickname: p.nickname?.trim() || name.split(' ')[0],
-            image: p.image?.trim() || ''
-        });
-    } else {
-        players[id] = {
-            name,
-            nickname: p.nickname?.trim() || name.split(' ')[0],
-            position: p.position?.trim() || '',
-            number: p.number?.trim() || '',
-            image: p.image?.trim() || '',
-        };
-    }
-});
-console.log('Parsed players:', players); // Debug linje
+                // 1. Players
+                const playersRaw = await fetchSheet(SHEET_ID, 'players');
+                playersRaw.forEach(p => {
+                    const id   = p.player_id?.trim();
+                    const name = p.name?.trim();
+                    if (!id || !name) return;
 
-                // Training
-                const trainingRaw = await fetchSheet('training');
-                trainingData = trainingRaw.map(row => ({
-                    id: row.player_id,
-                    name: players[row.player_id]?.name || row.player_id,
-                    image: players[row.player_id]?.image || '',
-                    position: players[row.player_id]?.position || '',
-                    points: parseFloat(row.total) || 0,
-                })).sort((a, b) => b.points - a.points);
+                    if (p.role?.trim().toLowerCase() === 'coach') {
+                        coaches.push({
+                            id,
+                            name,
+                            nickname: p.nickname?.trim() || name.split(' ')[0],
+                            image:    p.image?.trim() || '',
+                        });
+                    } else {
+                        players[id] = {
+                            name,
+                            nickname: p.nickname?.trim() || name.split(' ')[0],
+                            position: p.position?.trim() || '',
+                            number:   p.number?.trim() || '',
+                            image:    p.image?.trim() || '',
+                        };
+                    }
+                });
 
-                // Matches
-                const matchesRaw = await fetchSheet('matches');
+                // 2. Training
+                const trainingRaw = await fetchSheet(SHEET_ID, 'training');
+                trainingData = trainingRaw
+                    .filter(row => players[row.player_id?.trim()])
+                    .map(row => {
+                        const id = row.player_id.trim();
+                        return {
+                            id,
+                            name:     players[id].name,
+                            image:    players[id].image,
+                            position: players[id].position,
+                            points:   parseFloat(row.total) || 0,
+                        };
+                    })
+                    .sort((a, b) => b.points - a.points);
+
+                // 3. Matches
+                const matchesRaw = await fetchSheet(SHEET_ID, 'matches');
                 matchHistory = matchesRaw.map(row => ({
-                    id: row.id,
-                    away: row.away,
+                    id:        row.id?.trim(),
+                    homeTeam:  row.home_team?.trim(),
+                    awayTeam:  row.away_team?.trim(),
                     homeScore: parseInt(row.home_score) || 0,
                     awayScore: parseInt(row.away_score) || 0,
-                    date: row.date,
-                    weekday: row.weekday,
+                    date:      row.date?.trim(),
+                    weekday:   row.weekday?.trim(),
                 }));
 
-                // Lineups
-                const lineupsRaw = await fetchSheet('match_lineups');
-                matchLineups = lineupsRaw.map(row => ({
-                    match_id: row.match_id,
-                    position: row.position,
-                    player_id: row.player_id,
-                    name: players[row.player_id]?.name || row.player_id,
-                    nickname: players[row.player_id]?.nickname || row.player_id,
-                    image: players[row.player_id]?.image || '',
-                }));
+                // 4. Lineups
+                const lineupsRaw = await fetchSheet(SHEET_ID, 'match_lineups');
+                matchLineups = lineupsRaw.map(row => {
+                    const pid = row.player_id?.trim();
+                    return {
+                        match_id:  row.match_id?.trim(),
+                        position:  row.position?.trim(),
+                        player_id: pid,
+                        name:      players[pid]?.name     || pid,
+                        nickname:  players[pid]?.nickname || pid,
+                        image:     players[pid]?.image    || '',
+                    };
+                });
 
-                // Match points
-                const pointsRaw = await fetchSheet('match_points');
+                // 5. Match points
+                const pointsRaw = await fetchSheet(SHEET_ID, 'match_points');
                 if (pointsRaw.length > 0) {
-                    const headers = Object.keys(pointsRaw[0]);
-                    const matchCols = headers.slice(2);
+                    const headers   = Object.keys(pointsRaw[0]);
+                    const matchCols = headers.slice(2); // Spring player_id og total over
 
                     pointsRaw.forEach(row => {
+                        const pid = row.player_id?.trim();
+                        if (!pid || !players[pid]) return;
                         matchCols.forEach((col, i) => {
                             const pts = parseFloat(row[col]) || 0;
                             if (pts > 0) {
                                 matchPoints.push({
-                                    match_id: matchHistory[i]?.id || String(i + 1),
-                                    player_id: row.player_id,
-                                    name: players[row.player_id]?.name || row.player_id,
-                                    image: players[row.player_id]?.image || '',
-                                    points: pts,
+                                    match_id:  matchHistory[i]?.id || String(i + 1),
+                                    player_id: pid,
+                                    name:      players[pid].name,
+                                    image:     players[pid].image,
+                                    points:    pts,
                                 });
                             }
                         });
                     });
 
-                    const matchTotals = {};
+                    // Samlet kamprangliste
+                    const totals = {};
                     pointsRaw.forEach(row => {
-                        const id = row.player_id;
-                        const name = players[id]?.name || id;
-                        const image = players[id]?.image || '';
-                        matchTotals[id] = { name, image, points: parseFloat(row.total) || 0 };
+                        const pid = row.player_id?.trim();
+                        if (!pid || !players[pid]) return;
+                        totals[pid] = {
+                            id:     pid,
+                            name:   players[pid].name,
+                            image:  players[pid].image,
+                            points: parseFloat(row.total) || 0,
+                        };
                     });
+                    matchData = Object.values(totals).sort((a, b) => b.points - a.points);
+                }
 
-                    matchData = Object.values(matchTotals).sort((a, b) => b.points - a.points);
+                // 6. Kontaktdata (privat sheet) - fejler stille hvis ikke sat op
+                try {
+                    const contactRaw = await fetchSheet(CONTACT_SHEET_ID, 'contact');
+                    contactRaw.forEach(row => {
+                        const pid = row.player_id?.trim();
+                        if (pid) contactData[pid] = {
+                            email:   row.email?.trim()   || '',
+                            phone:   row.phone?.trim()   || '',
+                            address: row.address?.trim() || '',
+                        };
+                    });
+                } catch (e) {
+                    console.log('Kontaktdata ikke tilgængelig endnu');
                 }
 
                 // Byg siden
@@ -892,9 +873,10 @@ console.log('Parsed players:', players); // Debug linje
                 buildLeaderboard(matchData, 'match-list');
                 buildMatchHistory();
 
-                const now = new Date();
+                const now    = new Date();
                 const months = ['januar','februar','marts','april','maj','juni','juli','august','september','oktober','november','december'];
-                document.getElementById('last-updated').textContent = `Sidst opdateret: ${now.getDate()}. ${months[now.getMonth()]} ${now.getFullYear()}`;
+                document.getElementById('last-updated').textContent =
+                    `Sidst opdateret: ${now.getDate()}. ${months[now.getMonth()]} ${now.getFullYear()}`;
 
             } catch (err) {
                 console.error(err);
@@ -920,56 +902,53 @@ console.log('Parsed players:', players); // Debug linje
         }
 
         // ============================================================
-        // BYGG RANGLISTE
+        // BYGG RANGLISTE - avatar kun én gang
         // ============================================================
-function buildLeaderboard(data, containerId) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '';
+        function buildLeaderboard(data, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
 
-    if (!data.length) {
-        container.innerHTML = '<div class="error">Ingen data endnu</div>';
-        return;
-    }
+            if (!data.length) {
+                container.innerHTML = '<div class="error">Ingen data endnu</div>';
+                return;
+            }
 
-    data.forEach((player, index) => {
-        const rank = index + 1;
-        const rankClass = rank <= 3 ? `rank-${rank}` : '';
-        const rankDisplay = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+            data.forEach((player, index) => {
+                const rank      = index + 1;
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                const rankDisplay = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
 
-        const card = document.createElement('div');
-        card.className = `player-card ${rankClass}`;
-        card.onclick = () => openProfile(player.id || findPlayerId(player.name));
+                const card = document.createElement('div');
+                card.className = `player-card ${rankClass}`;
+                card.onclick = () => openProfile(player.id);
 
-        // Rang
-        const rankEl = document.createElement('div');
-        rankEl.className = 'rank';
-        rankEl.textContent = rankDisplay;
+                const rankEl = document.createElement('div');
+                rankEl.className = 'rank';
+                rankEl.textContent = rankDisplay;
 
-        // Avatar - kun én gang
-        const avatar = buildAvatar(player.image, player.name, 'card-avatar');
+                const avatar = buildAvatarEl(player.image, player.name, 'card-avatar');
 
-        // Info
-        const infoEl = document.createElement('div');
-        infoEl.className = 'player-info';
-        infoEl.innerHTML = `
-            <div class="player-name">${player.name}</div>
-            <div class="player-details">${player.position || ''}</div>
-        `;
+                const infoEl = document.createElement('div');
+                infoEl.className = 'player-info';
+                infoEl.innerHTML = `
+                    <div class="player-name">${player.name}</div>
+                    <div class="player-details">${player.position || ''}</div>
+                `;
 
-        // Point
-        const pointsEl = document.createElement('div');
-        pointsEl.innerHTML = `
-            <div class="player-points">${player.points}</div>
-            <div class="points-label">point</div>
-        `;
+                const pointsEl = document.createElement('div');
+                pointsEl.innerHTML = `
+                    <div class="player-points">${player.points}</div>
+                    <div class="points-label">point</div>
+                `;
 
-        card.appendChild(rankEl);
-        card.appendChild(avatar);
-        card.appendChild(infoEl);
-        card.appendChild(pointsEl);
-        container.appendChild(card);
-    });
-}
+                card.appendChild(rankEl);
+                card.appendChild(avatar);
+                card.appendChild(infoEl);
+                card.appendChild(pointsEl);
+                container.appendChild(card);
+            });
+        }
+
         // ============================================================
         // BYGG KAMPHISTORIK
         // ============================================================
@@ -983,7 +962,7 @@ function buildLeaderboard(data, containerId) {
             }
 
             matchHistory.forEach(match => {
-                const diff = match.homeScore - match.awayScore;
+                const diff        = match.homeScore - match.awayScore;
                 const resultClass = diff > 0 ? 'result-win' : diff < 0 ? 'result-loss' : 'result-draw';
                 const resultText  = diff > 0 ? 'SEJR' : diff < 0 ? 'NEDERLAG' : 'UAFGJORT';
 
@@ -992,7 +971,7 @@ function buildLeaderboard(data, containerId) {
                 card.onclick = () => openMatchDetail(match.id);
                 card.innerHTML = `
                     <div class="match-card-left">
-                        <div class="match-teams">TST Fodbold vs ${match.away}</div>
+                        <div class="match-teams">${match.homeTeam} vs ${match.awayTeam}</div>
                         <div class="match-date">📅 ${match.weekday} ${match.date}</div>
                     </div>
                     <div class="match-score">${match.homeScore}-${match.awayScore}</div>
@@ -1004,7 +983,7 @@ function buildLeaderboard(data, containerId) {
         }
 
         // ============================================================
-        // BYGG BANE-RÆKKE MED SPILLERBILLEDER
+        // BYGG BANE-RÆKKE
         // ============================================================
         function buildPitchRow(playersArr, pointsMap, isSub = false) {
             const row = document.createElement('div');
@@ -1020,7 +999,7 @@ function buildLeaderboard(data, containerId) {
                 const imgWrap = document.createElement('div');
                 imgWrap.className = 'pitch-player-img-wrap';
 
-                const img = buildAvatar(image, name, 'pitch-player-img' + (isSub ? ' sub-img' : ''));
+                const img = buildAvatarEl(image, name, 'pitch-player-img' + (isSub ? ' sub-img' : ''), '44px');
 
                 const ptsBadge = document.createElement('div');
                 ptsBadge.className = 'shirt-points';
@@ -1052,9 +1031,9 @@ function buildLeaderboard(data, containerId) {
             document.getElementById('match-subnav').style.display = 'none';
             document.getElementById('match-detail-view').classList.add('active');
 
-            document.getElementById('detail-teams').textContent = `TST Fodbold vs ${match.away}`;
+            document.getElementById('detail-teams').textContent = `${match.homeTeam} vs ${match.awayTeam}`;
             document.getElementById('detail-score').textContent = `${match.homeScore} - ${match.awayScore}`;
-            document.getElementById('detail-date').textContent = `📅 ${match.weekday} ${match.date}`;
+            document.getElementById('detail-date').textContent  = `📅 ${match.weekday} ${match.date}`;
 
             // Point-map
             const pointsMap = {};
@@ -1072,7 +1051,7 @@ function buildLeaderboard(data, containerId) {
                 item.className = 'coach-item';
                 item.onclick = () => openProfile(coach.id);
 
-                const img = buildAvatar(coach.image, coach.name, 'coach-img');
+                const img = buildAvatarEl(coach.image, coach.name, 'coach-img');
                 const nameEl = document.createElement('div');
                 nameEl.className = 'coach-name';
                 nameEl.textContent = coach.nickname;
@@ -1082,7 +1061,7 @@ function buildLeaderboard(data, containerId) {
                 coachesContainer.appendChild(item);
             });
 
-            // Bane (4-2-3-1)
+            // Bane
             const pitch = document.getElementById('detail-pitch');
             pitch.innerHTML = '';
             const rows = [
@@ -1106,24 +1085,29 @@ function buildLeaderboard(data, containerId) {
             // Point-liste
             const pointsContainer = document.getElementById('detail-points');
             pointsContainer.innerHTML = '';
-            const sorted = matchPoints.filter(p => p.match_id === matchId).sort((a, b) => b.points - a.points);
-            sorted.forEach(player => {
-                const el = document.createElement('div');
-                el.className = 'match-player-points';
-                el.onclick = () => openProfile(player.player_id);
+            matchPoints
+                .filter(p => p.match_id === matchId)
+                .sort((a, b) => b.points - a.points)
+                .forEach(player => {
+                    const el = document.createElement('div');
+                    el.className = 'match-player-points';
+                    el.onclick = () => openProfile(player.player_id);
 
-                const avatar = buildAvatar(player.image, player.name, 'card-avatar');
-                avatar.style.width = '36px';
-                avatar.style.height = '36px';
+                    const avatar = buildAvatarEl(player.image, player.name, 'card-avatar', '36px');
 
-                el.appendChild(avatar);
-                el.innerHTML += `
-                    <div class="match-player-points-name">${player.name}</div>
-                    <div class="match-player-points-score">+${player.points}p</div>
-                `;
-                el.insertBefore(avatar, el.firstChild);
-                pointsContainer.appendChild(el);
-            });
+                    const nameEl = document.createElement('div');
+                    nameEl.className = 'match-player-points-name';
+                    nameEl.textContent = player.name;
+
+                    const ptsEl = document.createElement('div');
+                    ptsEl.className = 'match-player-points-score';
+                    ptsEl.textContent = `+${player.points}p`;
+
+                    el.appendChild(avatar);
+                    el.appendChild(nameEl);
+                    el.appendChild(ptsEl);
+                    pointsContainer.appendChild(el);
+                });
         }
 
         function closeMatchDetail() {
@@ -1137,11 +1121,9 @@ function buildLeaderboard(data, containerId) {
         // ============================================================
         function openProfile(playerId) {
             if (!playerId) return;
-
             const player = players[playerId];
             if (!player) return;
 
-            // Gem kontekst så vi kan gå tilbage
             profileReturnContext = document.querySelector('.tab-content.active')?.id || 'training';
 
             // Skjul alt andet
@@ -1150,30 +1132,60 @@ function buildLeaderboard(data, containerId) {
             document.getElementById('last-updated').style.display = 'none';
 
             // Vis profil
-            const profileEl = document.getElementById('player-profile');
-            profileEl.classList.add('active');
+            document.getElementById('player-profile').classList.add('active');
 
-            // Fyld data
-            const imgEl = document.getElementById('profile-img');
-            const src = avatarUrl(player.image);
-            if (src) {
-                imgEl.src = src;
-                imgEl.onerror = () => replacWithInitials(imgEl, player.name);
-            } else {
-                replacWithInitials(imgEl, player.name);
-            }
+            // Billede
+            const imgWrap = document.getElementById('profile-img-wrap');
+            imgWrap.innerHTML = '';
+            const avatar = buildAvatarEl(player.image, player.name, 'profile-img', '90px');
+            imgWrap.appendChild(avatar);
 
-            document.getElementById('profile-name').textContent = player.name;
+            // Info
+            document.getElementById('profile-name').textContent     = player.name;
             document.getElementById('profile-position').textContent = player.position || 'Spiller';
-            document.getElementById('profile-number').textContent = player.number ? `#${player.number}` : 'Trøjenummer ikke tildelt';
+            document.getElementById('profile-number').textContent   = player.number ? `#${player.number}` : 'Trøjenummer ikke tildelt endnu';
 
-            // Træningspoint
+            // Point
             const trainingPts = trainingData.find(t => t.id === playerId)?.points || 0;
+            const matchPts    = matchData.find(m => m.id === playerId)?.points || 0;
             document.getElementById('profile-training-pts').textContent = trainingPts;
+            document.getElementById('profile-match-pts').textContent    = matchPts;
 
-            // Kamppoint
-            const matchPts = matchData.find(m => findPlayerId(m.name) === playerId)?.points || 0;
-            document.getElementById('profile-match-pts').textContent = matchPts;
+            // Kontaktinfo
+            const contactSection = document.getElementById('profile-contact-section');
+            const contactBox     = document.getElementById('profile-contact');
+            const contact        = contactData[playerId];
+            contactBox.innerHTML = '';
+
+            if (contact && (contact.email || contact.phone || contact.address)) {
+                contactSection.style.display = 'block';
+                if (contact.phone) {
+                    contactBox.innerHTML += `
+                        <div class="profile-contact-row">
+                            <span class="profile-contact-icon">📱</span>
+                            <span class="profile-contact-label">Telefon</span>
+                            <span class="profile-contact-value">${contact.phone}</span>
+                        </div>`;
+                }
+                if (contact.email) {
+                    contactBox.innerHTML += `
+                        <div class="profile-contact-row">
+                            <span class="profile-contact-icon">✉️</span>
+                            <span class="profile-contact-label">Email</span>
+                            <span class="profile-contact-value">${contact.email}</span>
+                        </div>`;
+                }
+                if (contact.address) {
+                    contactBox.innerHTML += `
+                        <div class="profile-contact-row">
+                            <span class="profile-contact-icon">📍</span>
+                            <span class="profile-contact-label">Adresse</span>
+                            <span class="profile-contact-value">${contact.address}</span>
+                        </div>`;
+                }
+            } else {
+                contactSection.style.display = 'none';
+            }
 
             // Seneste kampe
             const matchesContainer = document.getElementById('profile-matches');
@@ -1186,7 +1198,7 @@ function buildLeaderboard(data, containerId) {
                     return bIdx - aIdx;
                 });
 
-            if (playerMatchPts.length === 0) {
+            if (!playerMatchPts.length) {
                 matchesContainer.innerHTML = '<div style="color:#aaa;font-size:0.85em;padding:10px 0">Ingen kampe endnu</div>';
             } else {
                 playerMatchPts.forEach(mp => {
@@ -1196,7 +1208,7 @@ function buildLeaderboard(data, containerId) {
                     row.className = 'profile-match-row';
                     row.innerHTML = `
                         <div>
-                            <div class="profile-match-name">TST vs ${match.away}</div>
+                            <div class="profile-match-name">${match.homeTeam} vs ${match.awayTeam}</div>
                             <div class="profile-match-date">${match.weekday} ${match.date}</div>
                         </div>
                         <div class="profile-match-pts">+${mp.points}p</div>
@@ -1212,7 +1224,6 @@ function buildLeaderboard(data, containerId) {
             document.querySelector('.tabs').style.display = '';
             document.getElementById('last-updated').style.display = '';
 
-            // Genaktiver den rigtige tab
             if (profileReturnContext) {
                 document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
                 document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
@@ -1227,7 +1238,7 @@ function buildLeaderboard(data, containerId) {
         // TAB NAVIGATION
         // ============================================================
         function showTab(tabName, btn) {
-            document.querySelectorAll('.tab-').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             btn.classList.add('active');
