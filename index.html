@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TST Fodbold - Rangliste</title>
+    <style>
+        /* ========================================
+           FARVER OG GRUNDLÆGGENDE DESIGN
+           Skift her hvis I vil ændre farvetema
+        ======================================== */
+        :root {
+            --primary-color: #1a5c1a;      /* Mørkegrøn - hovedfarve */
+            --secondary-color: #2d8c2d;    /* Lysere grøn - sekundær */
+            --accent-color: #4CAF50;       /* Lys grøn - highlights */
+            --background-color: #0f3d0f;   /* Meget mørk grøn - baggrund */
+            --card-color: #1e1e1e;         /* Mørk grå - kort baggrund */
+            --text-color: #ffffff;         /* Hvid tekst */
+            --gold: #FFD700;               /* Guld - 1. plads */
+            --silver: #C0C0C0;             /* Sølv - 2. plads */
+            --bronze: #CD7F32;             /* Bronze - 3. plads */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ========================================
+           HEADER
+        ======================================== */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            color: var(--accent-color);
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        /* ========================================
+           TABS (skifter mellem træning og kamp)
+        ======================================== */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background-color: var(--primary-color);
+        }
+
+        .tab-button {
+            padding: 12px 40px;
+            border: 2px solid var(--accent-color);
+            background: transparent;
+            color: var(--text-color);
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tab-button.active {
+            background-color: var(--accent-color);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .tab-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* ========================================
+           POINT-OVERSIGT (viser hvad der giver point)
+        ======================================== */
+        .points-guide {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .points-guide h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .points-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .point-badge {
+            background-color: var(--card-color);
+            border: 1px solid var(--secondary-color);
+            border-radius: 15px;
+            padding: 5px 12px;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .point-badge span {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* ========================================
+           RANGLISTE
+        ======================================== */
+        .leaderboard {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px 40px;
+        }
+
+        .leaderboard h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .player-card {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid var(--secondary-color);
+            transition: transform 0.2s;
+        }
+
+        .player-card:hover {
+            transform: translateX(5px);
+        }
+
+        /* Top 3 får særlig styling */
+        .player-card.rank-1 { border-left-color: var(--gold); }
+        .player-card.rank-2 { border-left-color: var(--silver); }
+        .player-card.rank-3 { border-left-color: var(--bronze); }
+
+        .rank {
+            font-size: 1.5em;
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .rank-1 .rank { color: var(--gold); }
+        .rank-2 .rank { color: var(--silver); }
+        .rank-3 .rank { color: var(--bronze); }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .player-details {
+            font-size: 0.8em;
+            color: #aaa;
+            margin-top: 3px;
+        }
+
+        .player-points {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .points-label {
+            font-size: 0.7em;
+            color: #aaa;
+            text-align: right;
+        }
+
+        /* ========================================
+           SIDST OPDATERET
+        ======================================== */
+        .last-updated {
+            text-align: center;
+            color: #666;
+            font-size: 0.8em;
+            padding-bottom: 20px;
+        }
+
+        /* ========================================
+           TAB INDHOLD (skjuler/viser de to lister)
+        ======================================== */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>⚽ TST Fodbold</h1>
+        <p>Sæson 2025/2026 · Rangliste</p>
+    </header>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab-button active" onclick="showTab('training')">🏃 Træning</button>
+        <button class="tab-button" onclick="showTab('match')">⚽ Kamp</button>
+    </div>
+
+    <!-- ==========================================
+         TRÆNINGS-TAB
+    =========================================== -->
+    <div id="training" class="tab-content active">
+
+        <!-- Hvad giver point - let at tilføje/fjerne linjer her -->
+        <div class="points-guide">
+            <h3>⭐ Sådan optjenes point</h3>
+            <div class="points-grid" id="training-guide">
+                <!-- Tilføj eller fjern point-badges her -->
+            </div>
+        </div>
+
+        <div class="leaderboard">
+            <h2>🏃 Træningsrangliste</h2>
+            <div id="training-list"></div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         KAMP-TAB
+    =========================================== -->
+    <div id="match" class="tab-content">
+
+        <div class="points-guide">
+            <h3>⭐ Sådan optjenes point</h3>
+            <div class="points-grid" id="match-guide">
+                <!-- Tilføj eller fjern point-badges her -->
+            </div>
+        </div>
+
+        <div class="leaderboard">
+            <h2>⚽ Kamprangliste</h2>
+            <div id="match-list"></div>
+        </div>
+    </div>
+
+    <p class="last-updated" id="last-updated"></p>
+
+    <script>
+        // ============================================================
+        // POINT-REGLER
+        // Tilføj, fjern eller ændr point-regler her
+        // Format: { label: "Beskrivelse", points: antal }
+        // ============================================================
+        const trainingPointRules = [
+            { label: "Møder til træning", points: 3 },
+            { label: "Møder til tiden", points: 1 },
+            { label: "Rengøring", points: 2 },
+            { label: "Sætter op/pakker ned", points: 1 },
+            { label: "5 træninger i træk", points: 5 },
+        ];
+
+        const matchPointRules = [
+            { label: "Møder til kamp", points: 3 },
+            { label: "Mål", points: 3 },
+            { label: "Assist", points: 2 },
+            { label: "Rent baghold", points: 3 },
+            { label: "Mand for kampen", points: 5 },
+        ];
+
+        // ============================================================
+        // SPILLERDATA - TRÆNING
+        // Tilføj, fjern eller opdater spillere her
+        // Format: { name: "Navn", points: antal, details: "valgfri info" }
+        // ============================================================
+        const trainingData = [
+            { name: "Anders Nielsen",   points: 42, details: "14 træninger · 3x rengøring" },
+            { name: "Mikkel Hansen",    points: 38, details: "13 træninger · 2x rengøring" },
+            { name: "Jonas Pedersen",   points: 35, details: "12 træninger · 1x rengøring" },
+            { name: "Rasmus Larsen",    points: 30, details: "10 træninger · 2x rengøring" },
+            { name: "Søren Madsen",     points: 27, details: "9 træninger · 1x rengøring" },
+            { name: "Thomas Christensen", points: 22, details: "8 træninger" },
+            { name: "Martin Jensen",    points: 18, details: "6 træninger · 1x rengøring" },
+            { name: "Kasper Møller",    points: 15, details: "5 træninger" },
+        ];
+
+        // ============================================================
+        // SPILLERDATA - KAMP
+        // Tilføj, fjern eller opdater spillere her
+        // ============================================================
+        const matchData = [
+            { name: "Mikkel Hansen",    points: 55, details: "8 mål · 5 assists" },
+            { name: "Anders Nielsen",   points: 48, details: "6 mål · 7 assists" },
+            { name: "Jonas Pedersen",   points: 40, details: "5 mål · 4 assists · 2x mand for kampen" },
+            { name: "Rasmus Larsen",    points: 35, details: "4 mål · 3 assists" },
+            { name: "Thomas Christensen", points: 30, details: "3x rent baghold · 2x mand for kampen" },
+            { name: "Søren Madsen",     points: 25, details: "3 mål · 2 assists" },
+            { name: "Martin Jensen",    points: 20, details: "2 mål · 3 assists" },
+            { name: "Kasper Møller",    points: 15, details: "1 mål · 2 assists" },
+        ];
+
+        // ============================================================
+        // SIDST OPDATERET DATO
+        // Skift denne dato hver gang du opdaterer point
+        // ============================================================
+        const lastUpdated = "23. juli 2026";
+
+
+        // ============================================================
+        // HERUNDER SKAL DU IKKE ÆNDRE NOGET
+        // Dette er koden der bygger siden automatisk
+        // ============================================================
+
+        function buildGuide(rules, containerId) {
+            const container = document.getElementById(containerId);
+            rules.forEach(rule => {
+                const badge = document.createElement('div');
+                badge.className = 'point-badge';
+                badge.innerHTML = `${rule.label} <span>+${rule.points}p</span>`;
+                container.appendChild(badge);
+            });
+        }
+
+        function buildLeaderboard(data, containerId) {
+            const sorted = [...data].sort((a, b) => b.points - a.points);
+            const container = document.getElementById(containerId);
+
+            sorted.forEach((player, index) => {
+                const rank = index + 1;
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                const rankDisplay = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+
+                const card = document.createElement('div');
+                card.className = `player-card ${rankClass}`;
+                card.innerHTML = `
+                    <div class="rank">${rankDisplay}</div>
+                    <div class="player-info">
+                        <div class="player-name">${player.name}</div>
+                        <div class="player-details">${player.details || ''}</div>
+                    </div>
+                    <div>
+                        <div class="player-points">${player.points}</div>
+                        <div class="points-label">point</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Byg siden når den loader
+        buildGuide(trainingPointRules, 'training-guide');
+        buildGuide(matchPointRules, 'match-guide');
+        buildLeaderboard(trainingData, 'training-list');
+        buildLeaderboard(matchData, 'match-list');
+        document.getElementById('last-updated').textContent = `Sidst opdateret: ${lastUpdated}`;
+    </script>
+
+</body>
+</html>
