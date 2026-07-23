@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TST Fodbold - Rangliste</title>
     <style>
-        /* ========================================
-           FARVER OG GRUNDLÆGGENDE DESIGN
-        ======================================== */
         :root {
             --primary-color: #1a5c1a;
             --secondary-color: #2d8c2d;
@@ -18,7 +15,6 @@
             --gold: #FFD700;
             --silver: #C0C0C0;
             --bronze: #CD7F32;
-            --pitch-green: #2d7a2d;
             --pitch-line: rgba(255,255,255,0.15);
         }
 
@@ -31,9 +27,6 @@
             min-height: 100vh;
         }
 
-        /* ========================================
-           HEADER
-        ======================================== */
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             padding: 20px;
@@ -44,9 +37,6 @@
         header h1 { font-size: 2.5em; letter-spacing: 2px; text-transform: uppercase; }
         header p { color: var(--accent-color); margin-top: 5px; font-size: 0.9em; }
 
-        /* ========================================
-           TABS
-        ======================================== */
         .tabs {
             display: flex;
             justify-content: center;
@@ -71,23 +61,8 @@
         .tab-button.active { background-color: var(--accent-color); color: #000; font-weight: bold; }
         .tab-button:hover { background-color: var(--secondary-color); }
 
-        /* ========================================
-           POINT-OVERSIGT
-        ======================================== */
-        .points-guide {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        .points-guide h3 {
-            color: var(--accent-color);
-            margin-bottom: 10px;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
+        .points-guide { max-width: 800px; margin: 20px auto; padding: 0 20px; }
+        .points-guide h3 { color: var(--accent-color); margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; }
         .points-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 
         .point-badge {
@@ -103,9 +78,6 @@
 
         .point-badge span { color: var(--accent-color); font-weight: bold; }
 
-        /* ========================================
-           RANGLISTE
-        ======================================== */
         .leaderboard { max-width: 800px; margin: 20px auto; padding: 0 20px 40px; }
         .leaderboard h2 { text-align: center; margin-bottom: 20px; color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; }
 
@@ -137,9 +109,6 @@
         .player-points { font-size: 1.8em; font-weight: bold; color: var(--accent-color); }
         .points-label { font-size: 0.7em; color: #aaa; text-align: right; }
 
-        /* ========================================
-           KAMPHISTORIK LISTE
-        ======================================== */
         .match-history { max-width: 800px; margin: 20px auto; padding: 0 20px 40px; }
         .match-history h2 { text-align: center; margin-bottom: 20px; color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; }
 
@@ -157,7 +126,6 @@
         }
 
         .match-card:hover { transform: translateX(5px); border-left-color: var(--accent-color); }
-
         .match-card-left { display: flex; flex-direction: column; gap: 4px; }
         .match-teams { font-size: 1.1em; font-weight: bold; }
         .match-date { font-size: 0.8em; color: #aaa; }
@@ -181,12 +149,8 @@
         .result-win { background-color: #1a5c1a; color: #4CAF50; }
         .result-loss { background-color: #5c1a1a; color: #f44336; }
         .result-draw { background-color: #5c4a1a; color: #FFC107; }
-
         .match-arrow { color: #aaa; font-size: 1.2em; }
 
-        /* ========================================
-           KAMP DETALJE VIEW
-        ======================================== */
         .match-detail { display: none; }
         .match-detail.active { display: block; }
 
@@ -220,29 +184,16 @@
         .match-detail-header .big-score { font-size: 3em; font-weight: bold; margin: 10px 0; }
         .match-detail-header .match-detail-date { color: #aaa; font-size: 0.9em; }
 
-        /* ========================================
-           FODBOLDBANE
-        ======================================== */
-        .pitch-container {
-            max-width: 500px;
-            margin: 0 auto 30px;
-            padding: 0 20px;
-        }
+        .pitch-container { max-width: 500px; margin: 0 auto 30px; padding: 0 20px; }
 
         .pitch {
             background: linear-gradient(180deg,
-                #2d7a2d 0%, #327a32 8.33%,
-                #2d7a2d 8.33%, #327a32 16.66%,
-                #2d7a2d 16.66%, #327a32 25%,
-                #2d7a2d 25%, #327a32 33.33%,
-                #2d7a2d 33.33%, #327a32 41.66%,
-                #2d7a2d 41.66%, #327a32 50%,
-                #2d7a2d 50%, #327a32 58.33%,
-                #2d7a2d 58.33%, #327a32 66.66%,
-                #2d7a2d 66.66%, #327a32 75%,
-                #2d7a2d 75%, #327a32 83.33%,
-                #2d7a2d 83.33%, #327a32 91.66%,
-                #2d7a2d 91.66%, #327a32 100%
+                #2d7a2d 0%, #327a32 8.33%, #2d7a2d 8.33%, #327a32 16.66%,
+                #2d7a2d 16.66%, #327a32 25%, #2d7a2d 25%, #327a32 33.33%,
+                #2d7a2d 33.33%, #327a32 41.66%, #2d7a2d 41.66%, #327a32 50%,
+                #2d7a2d 50%, #327a32 58.33%, #2d7a2d 58.33%, #327a32 66.66%,
+                #2d7a2d 66.66%, #327a32 75%, #2d7a2d 75%, #327a32 83.33%,
+                #2d7a2d 83.33%, #327a32 91.66%, #2d7a2d 91.66%, #327a32 100%
             );
             border-radius: 10px;
             border: 2px solid rgba(255,255,255,0.3);
@@ -251,7 +202,6 @@
             overflow: hidden;
         }
 
-        /* Banelinjer */
         .pitch::before {
             content: '';
             position: absolute;
@@ -275,7 +225,6 @@
             transform: translate(-50%, -50%);
         }
 
-        /* Rækker på banen */
         .pitch-row {
             display: flex;
             justify-content: center;
@@ -287,29 +236,18 @@
 
         .pitch-row:last-child { margin-bottom: 0; }
 
-        /* Spiller ikon på banen */
         .pitch-player {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px;
             min-width: 60px;
-            cursor: default;
         }
 
-        .player-shirt {
-            width: 40px;
-            height: 40px;
-            position: relative;
-        }
+        .player-shirt { width: 40px; height: 40px; position: relative; }
+        .player-shirt svg { width: 100%; height: 100%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
 
-        .player-shirt svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-
-        .player-shirt .shirt-points {
+        .shirt-points {
             position: absolute;
             top: -8px;
             right: -8px;
@@ -339,23 +277,8 @@
             border-radius: 3px;
         }
 
-        /* ========================================
-           INDSKIFTERE SEKTION
-        ======================================== */
-        .substitutes-section {
-            max-width: 500px;
-            margin: 0 auto 30px;
-            padding: 0 20px;
-        }
-
-        .substitutes-section h3 {
-            color: var(--accent-color);
-            font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
+        .substitutes-section { max-width: 500px; margin: 0 auto 30px; padding: 0 20px; }
+        .substitutes-section h3 { color: var(--accent-color); font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; text-align: center; }
 
         .substitutes-row {
             display: flex;
@@ -368,22 +291,8 @@
             border: 1px dashed rgba(255,255,255,0.2);
         }
 
-        /* ========================================
-           POINT OVERSIGT PER KAMP
-        ======================================== */
-        .match-points-section {
-            max-width: 800px;
-            margin: 0 auto 40px;
-            padding: 0 20px;
-        }
-
-        .match-points-section h3 {
-            color: var(--accent-color);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-        }
+        .match-points-section { max-width: 800px; margin: 0 auto 40px; padding: 0 20px; }
+        .match-points-section h3 { color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-size: 0.9em; }
 
         .match-player-points {
             background-color: var(--card-color);
@@ -397,25 +306,12 @@
         }
 
         .match-player-points-name { font-weight: bold; }
-        .match-player-points-details { font-size: 0.8em; color: #aaa; margin-top: 2px; }
+        .match-player-points-score { font-size: 1.4em; font-weight: bold; color: var(--accent-color); }
 
-        .match-player-points-score {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-
-        /* ========================================
-           TAB INDHOLD
-        ======================================== */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
         .last-updated { text-align: center; color: #666; font-size: 0.8em; padding-bottom: 20px; }
 
-        /* ========================================
-           KAMP TAB - UNDER-NAVIGATION
-        ======================================== */
         .match-subnav {
             display: flex;
             justify-content: center;
@@ -441,6 +337,35 @@
 
         .match-subview { display: none; }
         .match-subview.active { display: block; }
+
+        /* Loading spinner */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--accent-color);
+            font-size: 1.1em;
+        }
+
+        .loading::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--secondary-color);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 15px auto 0;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #f44336;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -450,15 +375,12 @@
         <p>Sæson 2025/2026 · Rangliste</p>
     </header>
 
-    <!-- HOVED TABS -->
     <div class="tabs">
         <button class="tab-button active" onclick="showTab('training', this)">🏃 Træning</button>
         <button class="tab-button" onclick="showTab('match', this)">⚽ Kamp</button>
     </div>
 
-    <!-- ==========================================
-         TRÆNINGS-TAB
-    =========================================== -->
+    <!-- TRÆNINGS-TAB -->
     <div id="training" class="tab-content active">
         <div class="points-guide">
             <h3>⭐ Sådan optjenes point</h3>
@@ -466,22 +388,17 @@
         </div>
         <div class="leaderboard">
             <h2>🏃 Træningsrangliste</h2>
-            <div id="training-list"></div>
+            <div id="training-list"><div class="loading">Henter data</div></div>
         </div>
     </div>
 
-    <!-- ==========================================
-         KAMP-TAB
-    =========================================== -->
+    <!-- KAMP-TAB -->
     <div id="match" class="tab-content">
-
-        <!-- Under-navigation: Rangliste / Kamphistorik -->
         <div class="match-subnav">
             <button class="subnav-button active" onclick="showMatchSubview('match-leaderboard', this)">🏆 Rangliste</button>
             <button class="subnav-button" onclick="showMatchSubview('match-history-view', this)">📋 Kampe</button>
         </div>
 
-        <!-- Rangliste -->
         <div id="match-leaderboard" class="match-subview active">
             <div class="points-guide">
                 <h3>⭐ Sådan optjenes point</h3>
@@ -489,19 +406,17 @@
             </div>
             <div class="leaderboard">
                 <h2>⚽ Kamprangliste</h2>
-                <div id="match-list"></div>
+                <div id="match-list"><div class="loading">Henter data</div></div>
             </div>
         </div>
 
-        <!-- Kamphistorik liste -->
         <div id="match-history-view" class="match-subview">
             <div class="match-history">
                 <h2>📋 Kamphistorik</h2>
-                <div id="match-history-list"></div>
+                <div id="match-history-list"><div class="loading">Henter data</div></div>
             </div>
         </div>
 
-        <!-- Kamp detalje (skjult indtil man klikker) -->
         <div id="match-detail-view" class="match-detail">
             <button class="back-button" onclick="closeMatchDetail()">← Tilbage til kampe</button>
             <div class="match-detail-header">
@@ -509,32 +424,31 @@
                 <div class="big-score" id="detail-score"></div>
                 <div class="match-detail-date" id="detail-date"></div>
             </div>
-
-            <!-- Fodboldbane -->
             <div class="pitch-container">
                 <div class="pitch" id="detail-pitch"></div>
             </div>
-
-            <!-- Indskiftere -->
             <div class="substitutes-section">
                 <h3>🔄 Indskiftere</h3>
                 <div class="substitutes-row" id="detail-subs"></div>
             </div>
-
-            <!-- Point denne kamp -->
             <div class="match-points-section">
                 <h3>🏆 Point denne kamp</h3>
                 <div id="detail-points"></div>
             </div>
         </div>
-
     </div>
 
     <p class="last-updated" id="last-updated"></p>
 
     <script>
         // ============================================================
-        // POINT-REGLER
+        // SHEET ID - skift dette hvis du flytter dit Google Sheet
+        // ============================================================
+        const SHEET_ID = '1Mi_8L6jj4FkoDsWNcrwRVZTnCldJrZJ22m8qd3tMYGo';
+
+        // ============================================================
+        // POINT-REGLER (disse styres stadig i koden)
+        // Tilføj, fjern eller ændr regler her
         // ============================================================
         const trainingPointRules = [
             { label: "Møder til træning", points: 3 },
@@ -553,128 +467,144 @@
         ];
 
         // ============================================================
-        // SPILLERDATA - TRÆNING
-        // ============================================================
-        const trainingData = [
-            { name: "Anders Nielsen",     points: 42, details: "14 træninger · 3x rengøring" },
-            { name: "Mikkel Hansen",      points: 38, details: "13 træninger · 2x rengøring" },
-            { name: "Jonas Pedersen",     points: 35, details: "12 træninger · 1x rengøring" },
-            { name: "Rasmus Larsen",      points: 30, details: "10 træninger · 2x rengøring" },
-            { name: "Søren Madsen",       points: 27, details: "9 træninger · 1x rengøring" },
-            { name: "Thomas Christensen", points: 22, details: "8 træninger" },
-            { name: "Martin Jensen",      points: 18, details: "6 træninger · 1x rengøring" },
-            { name: "Kasper Møller",      points: 15, details: "5 træninger" },
-        ];
-
-        // ============================================================
-        // SPILLERDATA - KAMP (samlet rangliste)
-        // ============================================================
-        const matchData = [
-            { name: "Mikkel Hansen",      points: 55, details: "8 mål · 5 assists" },
-            { name: "Anders Nielsen",     points: 48, details: "6 mål · 7 assists" },
-            { name: "Jonas Pedersen",     points: 40, details: "5 mål · 4 assists · 2x mand for kampen" },
-            { name: "Rasmus Larsen",      points: 35, details: "4 mål · 3 assists" },
-            { name: "Thomas Christensen", points: 30, details: "3x rent baghold · 2x mand for kampen" },
-            { name: "Søren Madsen",       points: 25, details: "3 mål · 2 assists" },
-            { name: "Martin Jensen",      points: 20, details: "2 mål · 3 assists" },
-            { name: "Kasper Møller",      points: 15, details: "1 mål · 2 assists" },
-        ];
-
-        // ============================================================
-        // KAMPDATA
-        // Formation er altid 4-2-3-1
-        // Lineup format:
-        //   goalkeeper: "Navn"
-        //   defenders:  ["Navn", "Navn", "Navn", "Navn"]       (4)
-        //   defensive_mid: ["Navn", "Navn"]                    (2)
-        //   attacking_mid: ["Navn", "Navn", "Navn"]            (3)
-        //   striker: ["Navn"]                                   (1)
-        //   substitutes: ["Navn", ...]
-        //
-        // playerPoints format:
-        //   { name: "Navn", points: antal, details: "hvad de gjorde" }
-        // ============================================================
-        const matchHistory = [
-            {
-                id: 1,
-                home: "TST Fodbold",
-                away: "FC Nordvest",
-                homeScore: 3,
-                awayScore: 1,
-                date: "21. juli 2026",
-                lineup: {
-                    goalkeeper:     ["Kasper Møller"],
-                    defenders:      ["Thomas Christensen", "Rasmus Larsen", "Martin Jensen", "Søren Madsen"],
-                    defensive_mid:  ["Anders Nielsen", "Jonas Pedersen"],
-                    attacking_mid:  ["Mikkel Hansen", "Rasmus Larsen", "Søren Madsen"],
-                    striker:        ["Mikkel Hansen"],
-                },
-                substitutes: ["Martin Jensen", "Kasper Møller"],
-                playerPoints: [
-                    { name: "Mikkel Hansen",      points: 11, details: "2 mål · 1 assist · mødte op" },
-                    { name: "Anders Nielsen",     points: 8,  details: "1 mål · 2 assists · mødte op" },
-                    { name: "Jonas Pedersen",     points: 8,  details: "Mand for kampen · mødte op" },
-                    { name: "Thomas Christensen", points: 6,  details: "Rent baghold · mødte op" },
-                    { name: "Rasmus Larsen",      points: 5,  details: "1 assist · mødte op" },
-                    { name: "Søren Madsen",       points: 3,  details: "Mødte op" },
-                    { name: "Martin Jensen",      points: 3,  details: "Mødte op (indskifter)" },
-                    { name: "Kasper Møller",      points: 3,  details: "Mødte op (indskifter)" },
-                ],
-            },
-            {
-                id: 2,
-                home: "TST Fodbold",
-                away: "AB",
-                homeScore: 1,
-                awayScore: 2,
-                date: "14. juli 2026",
-                lineup: {
-                    goalkeeper:     ["Kasper Møller"],
-                    defenders:      ["Thomas Christensen", "Rasmus Larsen", "Martin Jensen", "Søren Madsen"],
-                    defensive_mid:  ["Anders Nielsen", "Jonas Pedersen"],
-                    attacking_mid:  ["Mikkel Hansen", "Rasmus Larsen", "Søren Madsen"],
-                    striker:        ["Mikkel Hansen"],
-                },
-                substitutes: ["Martin Jensen"],
-                playerPoints: [
-                    { name: "Mikkel Hansen",  points: 6,  details: "1 mål · mødte op" },
-                    { name: "Anders Nielsen", points: 5,  details: "1 assist · mødte op" },
-                    { name: "Jonas Pedersen", points: 3,  details: "Mødte op" },
-                    { name: "Rasmus Larsen",  points: 3,  details: "Mødte op" },
-                    { name: "Søren Madsen",   points: 3,  details: "Mødte op" },
-                    { name: "Martin Jensen",  points: 3,  details: "Mødte op (indskifter)" },
-                ],
-            },
-        ];
-
-        // ============================================================
-        // SIDST OPDATERET
-        // ============================================================
-        const lastUpdated = "23. juli 2026";
-
-
-        // ============================================================
         // HERUNDER SKAL DU IKKE ÆNDRE NOGET
         // ============================================================
 
-        // Trøje SVG (grøn TST-trøje)
-        function shirtSVG() {
-            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="30,10 70,10 85,30 70,25 70,90 30,90 30,25 15,30" fill="#1a5c1a" stroke="#4CAF50" stroke-width="3"/>
-                <polygon points="30,10 50,20 70,10 70,25 50,30 30,25" fill="#2d8c2d"/>
-            </svg>`;
+        // Globale data-objekter
+        let players = {};       // { player_id: { name, position } }
+        let trainingData = [];  // [{ name, points }]
+        let matchData = [];     // [{ name, points }]
+        let matchHistory = [];  // [{ id, away, home_score, away_score, date, weekday }]
+        let matchLineups = [];  // [{ match_id, position, player_id }]
+        let matchPoints = [];   // [{ match_id, player_id, points }]
+
+        // Hent CSV fra Google Sheets
+        function fetchSheet(sheetName) {
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${sheetName}`;
+            return fetch(url)
+                .then(res => res.text())
+                .then(csv => parseCSV(csv));
         }
 
-        // Indskifter trøje (lidt mørkere)
-        function subShirtSVG() {
-            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="30,10 70,10 85,30 70,25 70,90 30,90 30,25 15,30" fill="#0f3d0f" stroke="#2d8c2d" stroke-width="3"/>
-                <polygon points="30,10 50,20 70,10 70,25 50,30 30,25" fill="#1a5c1a"/>
-            </svg>`;
+        // Parse CSV til array af objekter
+        function parseCSV(csv) {
+            const lines = csv.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+            return lines.slice(1).map(line => {
+                // Håndter kommaer inde i citationstegn
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                for (let char of line) {
+                    if (char === '"') { inQuotes = !inQuotes; }
+                    else if (char === ',' && !inQuotes) { values.push(current.trim()); current = ''; }
+                    else { current += char; }
+                }
+                values.push(current.trim());
+
+                const obj = {};
+                headers.forEach((h, i) => { obj[h] = values[i] || ''; });
+                return obj;
+            }).filter(row => Object.values(row).some(v => v !== ''));
+        }
+
+        // Indlæs alle sheets
+        async function loadAllData() {
+            try {
+                // Hent players
+                const playersRaw = await fetchSheet('players');
+                playersRaw.forEach(p => {
+                    players[p.player_id] = { name: p.name, position: p.position };
+                });
+
+                // Hent training
+                const trainingRaw = await fetchSheet('training');
+                trainingData = trainingRaw.map(row => ({
+                    name: players[row.player_id]?.name || row.player_id,
+                    points: parseFloat(row.total) || 0,
+                })).sort((a, b) => b.points - a.points);
+
+                // Hent matches
+                const matchesRaw = await fetchSheet('matches');
+                matchHistory = matchesRaw.map(row => ({
+                    id: row.id,
+                    away: row.away,
+                    homeScore: parseInt(row.home_score) || 0,
+                    awayScore: parseInt(row.away_score) || 0,
+                    date: row.date,
+                    weekday: row.weekday,
+                }));
+
+                // Hent match_lineups
+                const lineupsRaw = await fetchSheet('match_lineups');
+                matchLineups = lineupsRaw.map(row => ({
+                    match_id: row.match_id,
+                    position: row.position,
+                    player_id: row.player_id,
+                    name: players[row.player_id]?.name || row.player_id,
+                }));
+
+                // Hent match_points
+                const pointsRaw = await fetchSheet('match_points');
+
+                // Byg match_points liste (en række per spiller per kamp)
+                // Kolonner: player_id, total, kamp1, kamp2, ...
+                // Vi skal mappe kolonne-headers til match id'er
+                if (pointsRaw.length > 0) {
+                    const headers = Object.keys(pointsRaw[0]);
+                    // Headers efter 'total' er kamp-kolonner (match id'er eller navne)
+                    const matchCols = headers.slice(2); // springer player_id og total over
+
+                    pointsRaw.forEach(row => {
+                        const playerId = row.player_id;
+                        matchCols.forEach((col, i) => {
+                            const pts = parseFloat(row[col]) || 0;
+                            if (pts > 0) {
+                                matchPoints.push({
+                                    match_id: matchHistory[i]?.id || (i + 1).toString(),
+                                    player_id: playerId,
+                                    name: players[playerId]?.name || playerId,
+                                    points: pts,
+                                });
+                            }
+                        });
+                    });
+
+                    // Byg samlet kamprangliste
+                    const matchTotals = {};
+                    pointsRaw.forEach(row => {
+                        const name = players[row.player_id]?.name || row.player_id;
+                        matchTotals[name] = parseFloat(row.total) || 0;
+                    });
+
+                    matchData = Object.entries(matchTotals)
+                        .map(([name, points]) => ({ name, points }))
+                        .sort((a, b) => b.points - a.points);
+                }
+
+                // Byg siden
+                buildGuide(trainingPointRules, 'training-guide');
+                buildGuide(matchPointRules, 'match-guide');
+                buildLeaderboard(trainingData, 'training-list');
+                buildLeaderboard(matchData, 'match-list');
+                buildMatchHistory();
+
+                const now = new Date();
+                document.getElementById('last-updated').textContent =
+                    `Sidst opdateret: ${now.getDate()}. ${['januar','februar','marts','april','maj','juni','juli','august','september','oktober','november','december'][now.getMonth()]} ${now.getFullYear()}`;
+
+            } catch (err) {
+                console.error(err);
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.className = 'error';
+                    el.textContent = 'Kunne ikke hente data. Tjek at Google Sheet er publiceret korrekt.';
+                });
+            }
         }
 
         function buildGuide(rules, containerId) {
             const container = document.getElementById(containerId);
+            container.innerHTML = '';
             rules.forEach(rule => {
                 const badge = document.createElement('div');
                 badge.className = 'point-badge';
@@ -684,9 +614,15 @@
         }
 
         function buildLeaderboard(data, containerId) {
-            const sorted = [...data].sort((a, b) => b.points - a.points);
             const container = document.getElementById(containerId);
-            sorted.forEach((player, index) => {
+            container.innerHTML = '';
+
+            if (!data.length) {
+                container.innerHTML = '<div class="error">Ingen data endnu</div>';
+                return;
+            }
+
+            data.forEach((player, index) => {
                 const rank = index + 1;
                 const rankClass = rank <= 3 ? `rank-${rank}` : '';
                 const rankDisplay = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
@@ -696,7 +632,6 @@
                     <div class="rank">${rankDisplay}</div>
                     <div class="player-info">
                         <div class="player-name">${player.name}</div>
-                        <div class="player-details">${player.details || ''}</div>
                     </div>
                     <div>
                         <div class="player-points">${player.points}</div>
@@ -709,6 +644,13 @@
 
         function buildMatchHistory() {
             const container = document.getElementById('match-history-list');
+            container.innerHTML = '';
+
+            if (!matchHistory.length) {
+                container.innerHTML = '<div class="error">Ingen kampe endnu</div>';
+                return;
+            }
+
             matchHistory.forEach(match => {
                 const diff = match.homeScore - match.awayScore;
                 const resultClass = diff > 0 ? 'result-win' : diff < 0 ? 'result-loss' : 'result-draw';
@@ -719,8 +661,8 @@
                 card.onclick = () => openMatchDetail(match.id);
                 card.innerHTML = `
                     <div class="match-card-left">
-                        <div class="match-teams">${match.home} vs ${match.away}</div>
-                        <div class="match-date">📅 ${match.date}</div>
+                        <div class="match-teams">TST Fodbold vs ${match.away}</div>
+                        <div class="match-date">📅 ${match.weekday} ${match.date}</div>
                     </div>
                     <div class="match-score">${match.homeScore}-${match.awayScore}</div>
                     <div>
@@ -732,21 +674,35 @@
             });
         }
 
-        function buildPitchRow(players, pointsMap) {
+        function shirtSVG() {
+            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="30,10 70,10 85,30 70,25 70,90 30,90 30,25 15,30" fill="#1a5c1a" stroke="#4CAF50" stroke-width="3"/>
+                <polygon points="30,10 50,20 70,10 70,25 50,30 30,25" fill="#2d8c2d"/>
+            </svg>`;
+        }
+
+        function subShirtSVG() {
+            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="30,10 70,10 85,30 70,25 70,90 30,90 30,25 15,30" fill="#0f3d0f" stroke="#2d8c2d" stroke-width="3"/>
+                <polygon points="30,10 50,20 70,10 70,25 50,30 30,25" fill="#1a5c1a"/>
+            </svg>`;
+        }
+
+        function buildPitchRow(players, pointsMap, isSub = false) {
             const row = document.createElement('div');
             row.className = 'pitch-row';
-            players.forEach(name => {
+            players.forEach(({ name }) => {
                 const pts = pointsMap[name] || 0;
-                const playerEl = document.createElement('div');
-                playerEl.className = 'pitch-player';
-                playerEl.innerHTML = `
+                const el = document.createElement('div');
+                el.className = 'pitch-player';
+                el.innerHTML = `
                     <div class="player-shirt">
-                        ${shirtSVG()}
+                        ${isSub ? subShirtSVG() : shirtSVG()}
                         <div class="shirt-points">${pts}</div>
                     </div>
                     <div class="pitch-player-name">${name.split(' ')[0]}</div>
                 `;
-                row.appendChild(playerEl);
+                row.appendChild(el);
             });
             return row;
         }
@@ -755,58 +711,64 @@
             const match = matchHistory.find(m => m.id === matchId);
             if (!match) return;
 
-            // Skjul kamphistorik, vis detalje
             document.getElementById('match-history-view').style.display = 'none';
             document.querySelector('.match-subnav').style.display = 'none';
             document.getElementById('match-detail-view').classList.add('active');
 
-            // Header info
-            document.getElementById('detail-teams').textContent = `${match.home} vs ${match.away}`;
+            document.getElementById('detail-teams').textContent = `TST Fodbold vs ${match.away}`;
             document.getElementById('detail-score').textContent = `${match.homeScore} - ${match.awayScore}`;
-            document.getElementById('detail-date').textContent = `📅 ${match.date}`;
+            document.getElementById('detail-date').textContent = `📅 ${match.weekday} ${match.date}`;
 
-            // Byg point-map til trøje badges
+            // Point-map for denne kamp
             const pointsMap = {};
-            match.playerPoints.forEach(p => { pointsMap[p.name] = p.points; });
+            matchPoints
+                .filter(p => p.match_id === matchId)
+                .forEach(p => { pointsMap[p.name] = p.points; });
 
-            // Byg banen (4-2-3-1)
+            // Lineup for denne kamp
+            const lineup = matchLineups.filter(l => l.match_id === matchId);
+
+            const getPosition = (pos) => lineup.filter(l => l.position === pos);
+
+            // Byg banen
             const pitch = document.getElementById('detail-pitch');
             pitch.innerHTML = '';
-            pitch.appendChild(buildPitchRow(match.lineup.striker,       pointsMap));
-            pitch.appendChild(buildPitchRow(match.lineup.attacking_mid,  pointsMap));
-            pitch.appendChild(buildPitchRow(match.lineup.defensive_mid,  pointsMap));
-            pitch.appendChild(buildPitchRow(match.lineup.defenders,      pointsMap));
-            pitch.appendChild(buildPitchRow(match.lineup.goalkeeper,     pointsMap));
 
-            // Byg indskiftere
-            const subsContainer = document.getElementById('detail-subs');
-            subsContainer.innerHTML = '';
-            match.substitutes.forEach(name => {
-                const pts = pointsMap[name] || 0;
-                const playerEl = document.createElement('div');
-                playerEl.className = 'pitch-player';
-                playerEl.innerHTML = `
-                    <div class="player-shirt">
-                        ${subShirtSVG()}
-                        <div class="shirt-points">${pts}</div>
-                    </div>
-                    <div class="pitch-player-name">${name.split(' ')[0]}</div>
-                `;
-                subsContainer.appendChild(playerEl);
+            // 4-2-3-1 formation (angriber øverst = tættest på modstander)
+            const rows = [
+                getPosition('striker'),
+                [...getPosition('left_wing'), ...getPosition('attacking_mid'), ...getPosition('right_wing')],
+                getPosition('defensive_mid'),
+                [...getPosition('left_back'), ...getPosition('centerback'), ...getPosition('right_back')],
+                getPosition('goalkeeper'),
+            ];
+
+            rows.forEach(row => {
+                if (row.length > 0) pitch.appendChild(buildPitchRow(row, pointsMap));
             });
 
-            // Byg point-liste
+            // Indskiftere
+            const subs = getPosition('substitute');
+            const subsContainer = document.getElementById('detail-subs');
+            subsContainer.innerHTML = '';
+            if (subs.length) {
+                const subRow = buildPitchRow(subs, pointsMap, true);
+                subRow.className = '';
+                Array.from(subRow.children).forEach(child => subsContainer.appendChild(child));
+            }
+
+            // Point-liste
             const pointsContainer = document.getElementById('detail-points');
             pointsContainer.innerHTML = '';
-            const sorted = [...match.playerPoints].sort((a, b) => b.points - a.points);
-            sorted.forEach(player => {
+            const matchPts = matchPoints
+                .filter(p => p.match_id === matchId)
+                .sort((a, b) => b.points - a.points);
+
+            matchPts.forEach(player => {
                 const el = document.createElement('div');
                 el.className = 'match-player-points';
                 el.innerHTML = `
-                    <div>
-                        <div class="match-player-points-name">${player.name}</div>
-                        <div class="match-player-points-details">${player.details}</div>
-                    </div>
+                    <div class="match-player-points-name">${player.name}</div>
                     <div class="match-player-points-score">+${player.points}p</div>
                 `;
                 pointsContainer.appendChild(el);
@@ -833,13 +795,8 @@
             btn.classList.add('active');
         }
 
-        // Byg siden
-        buildGuide(trainingPointRules, 'training-guide');
-        buildGuide(matchPointRules, 'match-guide');
-        buildLeaderboard(trainingData, 'training-list');
-        buildLeaderboard(matchData, 'match-list');
-        buildMatchHistory();
-        document.getElementById('last-updated').textContent = `Sidst opdateret: ${lastUpdated}`;
+        // Start
+        loadAllData();
     </script>
 
 </body>
