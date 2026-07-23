@@ -796,20 +796,30 @@
         async function loadAllData() {
             try {
                 // Players
-                const playersRaw = await fetchSheet('players');
-                playersRaw.forEach(p => {
-                    if (p.role === 'coach') {
-                        coaches.push({ id: p.player_id, name: p.name, nickname: p.nickname || p.name.split(' ')[0], image: p.image || '' });
-                    } else {
-                        players[p.player_id] = {
-                            name: p.name,
-                            nickname: p.nickname || p.name.split(' ')[0],
-                            position: p.position || '',
-                            number: p.number || '',
-                            image: p.image || '',
-                        };
-                    }
-                });
+            const playersRaw = await fetchSheet('players');
+console.log('Players raw data:', playersRaw); // Debug linje
+playersRaw.forEach(p => {
+    const id = p.player_id?.trim();
+    const name = p.name?.trim();
+    if (!id || !name) return; // Spring over tomme rækker
+    if (p.role?.trim() === 'coach') {
+        coaches.push({
+            id,
+            name,
+            nickname: p.nickname?.trim() || name.split(' ')[0],
+            image: p.image?.trim() || ''
+        });
+    } else {
+        players[id] = {
+            name,
+            nickname: p.nickname?.trim() || name.split(' ')[0],
+            position: p.position?.trim() || '',
+            number: p.number?.trim() || '',
+            image: p.image?.trim() || '',
+        };
+    }
+});
+console.log('Parsed players:', players); // Debug linje
 
                 // Training
                 const trainingRaw = await fetchSheet('training');
@@ -912,50 +922,54 @@
         // ============================================================
         // BYGG RANGLISTE
         // ============================================================
-        function buildLeaderboard(data, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
+function buildLeaderboard(data, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
 
-            if (!data.length) {
-                container.innerHTML = '<div class="error">Ingen data endnu</div>';
-                return;
-            }
+    if (!data.length) {
+        container.innerHTML = '<div class="error">Ingen data endnu</div>';
+        return;
+    }
 
-            data.forEach((player, index) => {
-                const rank = index + 1;
-                const rankClass = rank <= 3 ? `rank-${rank}` : '';
-                const rankDisplay = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+    data.forEach((player, index) => {
+        const rank = index + 1;
+        const rankClass = rank <= 3 ? `rank-${rank}` : '';
+        const rankDisplay = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
 
-                const card = document.createElement('div');
-                card.className = `player-card ${rankClass}`;
-                card.onclick = () => openProfile(player.id || findPlayerId(player.name));
+        const card = document.createElement('div');
+        card.className = `player-card ${rankClass}`;
+        card.onclick = () => openProfile(player.id || findPlayerId(player.name));
 
-                // Avatar
-                const avatar = buildAvatar(player.image, player.name, 'card-avatar');
+        // Rang
+        const rankEl = document.createElement('div');
+        rankEl.className = 'rank';
+        rankEl.textContent = rankDisplay;
 
-                card.innerHTML = `<div class="rank">${rankDisplay}</div>`;
-                card.appendChild(avatar);
-                card.innerHTML += `
-                    <div class="player-info">
-                        <div class="player-name">${player.name}</div>
-                        <div class="player-details">${player.position || ''}</div>
-                    </div>
-                    <div>
-                        <div class="player-points">${player.points}</div>
-                        <div class="points-label">point</div>
-                    </div>
-                `;
-                // Re-append avatar da innerHTML overskriver
-                const rankEl = card.querySelector('.rank');
-                card.insertBefore(avatar, rankEl.nextSibling);
-                container.appendChild(card);
-            });
-        }
+        // Avatar - kun én gang
+        const avatar = buildAvatar(player.image, player.name, 'card-avatar');
 
-        function findPlayerId(name) {
-            return Object.entries(players).find(([id, p]) => p.name === name)?.[0] || null;
-        }
+        // Info
+        const infoEl = document.createElement('div');
+        infoEl.className = 'player-info';
+        infoEl.innerHTML = `
+            <div class="player-name">${player.name}</div>
+            <div class="player-details">${player.position || ''}</div>
+        `;
 
+        // Point
+        const pointsEl = document.createElement('div');
+        pointsEl.innerHTML = `
+            <div class="player-points">${player.points}</div>
+            <div class="points-label">point</div>
+        `;
+
+        card.appendChild(rankEl);
+        card.appendChild(avatar);
+        card.appendChild(infoEl);
+        card.appendChild(pointsEl);
+        container.appendChild(card);
+    });
+}
         // ============================================================
         // BYGG KAMPHISTORIK
         // ============================================================
