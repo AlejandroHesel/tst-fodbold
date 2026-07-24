@@ -598,8 +598,6 @@
     </style>
 </head>
 <body>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y&libraries=geometry,places"></script>
-    
     <header>
         <h1>⚽ TST Fodbold</h1>
         <p>Sæson 2025/2026 · Rangliste</p>
@@ -1298,16 +1296,24 @@
         // ============================================================
         // SAMKØRSEL OG KORT
         // ============================================================
-        function toggleCarpooling() {
-            const container = document.getElementById('carpooling-map-container');
-            const isActive  = container.classList.contains('active');
-            if (isActive) {
-                container.classList.remove('active');
-            } else {
-                container.classList.add('active');
-                if (!carpoolingMap) initCarpoolingMap(currentProfileId);
-            }
-        }
+                function toggleCarpooling() {
+                    const container = document.getElementById('carpooling-map-container');
+                    const isActive  = container.classList.contains('active');
+                    if (isActive) {
+                        container.classList.remove('active');
+                    } else {
+                        container.classList.add('active');
+                        if (!carpoolingMap) {
+                            if (typeof google === 'undefined') {
+                                document.getElementById('carpooling-map').innerHTML = 
+                                    '<div class="map-loading">⏳ Google Maps loader stadig - prøv igen om et sekund</div>';
+                                setTimeout(() => initCarpoolingMap(currentProfileId), 2000);
+                            } else {
+                                initCarpoolingMap(currentProfileId);
+                            }
+                        }
+                    }
+                }
 
             async function geocodeAddress(address) {
                 if (geocodeCache[address]) return geocodeCache[address];
@@ -1505,6 +1511,6 @@
 
         // Start
         loadAllData();
-    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y&libraries=geometry,places"></script>
 </body>
 </html>
