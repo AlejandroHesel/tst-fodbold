@@ -652,18 +652,34 @@
         // ============================================================
         const trainingPointRules = [
             { label: "Møder til træning", points: 3 },
-            { label: "Møder til tiden", points: 1 },
-            { label: "Rengøring", points: 2 },
+            { label: "Fejer", points: 2 },
             { label: "Sætter op/pakker ned", points: 1 },
             { label: "5 træninger i træk", points: 5 },
+            { label: "Kommer for sent", points: -1 },
+            { label: "Melder fra på dagen", points: -2 },
+            { label: "Melder fra for sent", points: -1 },
         ];
 
         const matchPointRules = [
-            { label: "Møder til kamp", points: 3 },
-            { label: "Mål", points: 3 },
-            { label: "Assist", points: 2 },
-            { label: "Rent baghold", points: 3 },
-            { label: "Mand for kampen", points: 5 },
+            { label: "Spiller op til 60 minutter", points: 1 },
+            { label: "Spiller 60 minutter eller mere", points: 2 },
+            { label: "Mål scoret af målmand", points: 10 },
+            { label: "Mål scoret af forsvarer", points: 6 },
+            { label: "Mål scoret af midtbanespiller", points: 5 },
+            { label: "Mål scoret af angriber", points: 4 },
+            { label: "Assist", points: 3 },
+            { label: "Rent bur (målmand/forsvarer)", points: 4 },
+            { label: "Rent bur (midtbanespiller)", points: 1 },
+            { label: "3 redninger af målmand", points: 1 },
+            { label: "Straffesparksredning", points: 5 },
+            { label: "10 defensive bidrag af forsvarer", points: 2 },
+            { label: "12 defensive bidrag af midtbanespiller/angriber", points: 2 },
+            { label: "Straffesparksmiss", points: -2 },
+            { label: "Bonuspoint for bedste spillere", points: 1 },
+            { label: "2 mål indkasseret af målmand/forsvarer", points: -1 },
+            { label: "Gult kort", points: -1 },
+            { label: "Rødt kort", points: -3 },
+            { label: "Selvmål", points: -2 },
         ];
 
         // ============================================================
