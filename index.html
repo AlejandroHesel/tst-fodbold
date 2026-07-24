@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tst Fodbold - Rangliste</title>
     <style>
-        :root{
+        :root {
             --primary-color: #1a5c1a;
             --secondary-color: #2d8c2d;
             --accent-color: #4CAF50;
@@ -867,8 +867,7 @@
                             position: p.position?.trim() || '',
                             number:   p.number?.trim() || '',
                             image:    p.image?.trim() || '',
-                            address:  p.address?.trim() || '',
-};
+                        };
                     }
                 });
 
@@ -1308,44 +1307,36 @@
             }
         }
 
-            async function geocodeAddress(address) {
-                if (geocodeCache[address]) return geocodeCache[address];
-                return new Promise((resolve) => {
-                    const geocoder = new google.maps.Geocoder();
-                    geocoder.geocode({ address: address + ', Aarhus, Denmark' }, (results, status) => {
-                        if (status === 'OK' && results[0]) {
-                            const loc = results[0].geometry.location;
-                            geocodeCache[address] = { lat: loc.lat(), lng: loc.lng() };
-                            resolve(geocodeCache[address]);
-                        } else {
-                            resolve(null);
-                        }
-                    });
-                });
-            }
-            
-            async function getDistances(originAddress, destPlayers) {
-                return new Promise((resolve) => {
-                    const service = new google.maps.DistanceMatrixService();
-                    service.getDistanceMatrix({
-                        origins:      [originAddress + ', Aarhus, Denmark'],
-                        destinations: destPlayers.map(p => p.address + ', Aarhus, Denmark'),
-                        travelMode:   google.maps.TravelMode.DRIVING,
-                    }, (response, status) => {
-                        if (status === 'OK') {
-                            resolve(response.rows[0].elements);
-                        } else {
-                            resolve(destPlayers.map(() => ({ distance: { value: Infinity, text: '?' } })));
-                        }
-                    });
-                });
-            }
+        async function geocodeAddress(address) {
+            if (geocodeCache[address]) return geocodeCache[address];
+            const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address + ', Aarhus, Denmark')}&key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y`;
+            try {
+                const res  = await fetch(url);
+                const data = await res.json();
+                if (data.results?.[0]) {
+                    const loc = data.results[0].geometry.location;
+                    geocodeCache[address] = loc;
+                    return loc;
+                }
+            } catch (e) { console.error('Geocode fejl:', e); }
+            return null;
+        }
+
+        async function getDistances(originAddress, destinations) {
+            const destString = destinations.map(d => encodeURIComponent(d + ', Aarhus, Denmark')).join('|');
+            const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(originAddress + ', Aarhus, Denmark')}&destinations=${destString}&mode=driving&key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y`;
+            try {
+                const res  = await fetch(url);
+                const data = await res.json();
+                return data.rows[0]?.elements || [];
+            } catch (e) { console.error('Distance fejl:', e); return []; }
+        }
 
         async function initCarpoolingMap(profileId) {
             const mapContainer = document.getElementById('carpooling-map');
             mapContainer.innerHTML = '<div class="map-loading">🗺️ Henter adresser...</div>';
 
-            const currentContact = contactData[profileId] || players[profileId];
+            const currentContact = contactData[profileId];
             if (!currentContact?.address) {
                 mapContainer.innerHTML = '<div class="map-loading">Ingen adresse registreret for denne spiller</div>';
                 return;
@@ -1353,14 +1344,14 @@
 
             // Geocode alle spillere med adresser
             const allPlayers = Object.entries(players)
-                    .filter(([id, p]) => contactData[id]?.address || p.address)
-                    .map(([id, p]) => ({
-                        id,
-                        name:     p.name,
-                        nickname: p.nickname,
-                        image:    p.image,
-                        address:  contactData[id]?.address || p.address,
-                    }));
+                .filter(([id]) => contactData[id]?.address)
+                .map(([id, p]) => ({
+                    id,
+                    name:     p.name,
+                    nickname: p.nickname,
+                    image:    p.image,
+                    address:  contactData[id].address,
+                }));
 
             if (allPlayers.length === 0) {
                 mapContainer.innerHTML = '<div class="map-loading">Ingen adresser registreret endnu</div>';
@@ -1373,7 +1364,7 @@
 
             // Hent køreafstande
             const otherPlayers  = geocoded.filter(p => p.id !== profileId);
-            const distances = await getDistances(currentContact.address, otherPlayers);
+            const distances     = await getDistances(currentContact.address, otherPlayers.map(p => p.address));
 
             const playersWithDistance = otherPlayers.map((p, i) => ({
                 ...p,
@@ -1388,20 +1379,17 @@
             carpoolingMap = new google.maps.Map(mapContainer, {
                 zoom: 13,
                 center: selfCoords,
-                    styles: [
-                        { elementType: 'geometry',           stylers: [{ color: '#1d2c1d' }] },
-                        { elementType: 'labels.text.fill',   stylers: [{ color: '#ffffff' }] },
-                        { elementType: 'labels.text.stroke', stylers: [{ color: '#1d2c1d' }] },
-                        { featureType: 'road', elementType: 'geometry',        stylers: [{ color: '#2d4a2d' }] },
-                        { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#1a3a1a' }] },
-                        { featureType: 'road', elementType: 'labels.text.fill',stylers: [{ color: '#cccccc' }] },
-                        { featureType: 'road.highway', elementType: 'geometry',stylers: [{ color: '#3a6b3a' }] },
-                        { featureType: 'water', elementType: 'geometry',       stylers: [{ color: '#0d1f0d' }] },
-                        { featureType: 'water', elementType: 'labels.text.fill',stylers: [{ color: '#4CAF50' }] },
-                        { featureType: 'landscape', elementType: 'geometry',   stylers: [{ color: '#1a2e1a' }] },
-                        { featureType: 'poi',     stylers: [{ visibility: 'off' }] },
-                        { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-                    ],
+                styles: [
+                    { elementType: 'geometry',            stylers: [{ color: '#0f3d0f' }] },
+                    { elementType: 'labels.text.fill',    stylers: [{ color: '#ffffff' }] },
+                    { elementType: 'labels.text.stroke',  stylers: [{ color: '#0f3d0f' }] },
+                    { featureType: 'road', elementType: 'geometry',             stylers: [{ color: '#1a5c1a' }] },
+                    { featureType: 'road', elementType: 'geometry.stroke',      stylers: [{ color: '#2d8c2d' }] },
+                    { featureType: 'road', elementType: 'labels.text.fill',     stylers: [{ color: '#9ca5b3' }] },
+                    { featureType: 'water', elementType: 'geometry',            stylers: [{ color: '#0a2a0a' }] },
+                    { featureType: 'poi',     stylers: [{ visibility: 'off' }] },
+                    { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+                ],
             });
 
             const top5ids = new Set(playersWithDistance.slice(0, 5).map(p => p.id));
@@ -1504,6 +1492,7 @@
 
         // Start
         loadAllData();
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y&libraries=geometry,places" async defer></script>
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y&libraries=geometry&callback=Function.prototype" async defer></script>
 </body>
 </html>
