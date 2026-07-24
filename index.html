@@ -1380,17 +1380,20 @@
             carpoolingMap = new google.maps.Map(mapContainer, {
                 zoom: 13,
                 center: selfCoords,
-                styles: [
-                    { elementType: 'geometry',            stylers: [{ color: '#0f3d0f' }] },
-                    { elementType: 'labels.text.fill',    stylers: [{ color: '#ffffff' }] },
-                    { elementType: 'labels.text.stroke',  stylers: [{ color: '#0f3d0f' }] },
-                    { featureType: 'road', elementType: 'geometry',             stylers: [{ color: '#1a5c1a' }] },
-                    { featureType: 'road', elementType: 'geometry.stroke',      stylers: [{ color: '#2d8c2d' }] },
-                    { featureType: 'road', elementType: 'labels.text.fill',     stylers: [{ color: '#9ca5b3' }] },
-                    { featureType: 'water', elementType: 'geometry',            stylers: [{ color: '#0a2a0a' }] },
-                    { featureType: 'poi',     stylers: [{ visibility: 'off' }] },
-                    { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-                ],
+                    styles: [
+                        { elementType: 'geometry',           stylers: [{ color: '#1d2c1d' }] },
+                        { elementType: 'labels.text.fill',   stylers: [{ color: '#ffffff' }] },
+                        { elementType: 'labels.text.stroke', stylers: [{ color: '#1d2c1d' }] },
+                        { featureType: 'road', elementType: 'geometry',        stylers: [{ color: '#2d4a2d' }] },
+                        { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#1a3a1a' }] },
+                        { featureType: 'road', elementType: 'labels.text.fill',stylers: [{ color: '#cccccc' }] },
+                        { featureType: 'road.highway', elementType: 'geometry',stylers: [{ color: '#3a6b3a' }] },
+                        { featureType: 'water', elementType: 'geometry',       stylers: [{ color: '#0d1f0d' }] },
+                        { featureType: 'water', elementType: 'labels.text.fill',stylers: [{ color: '#4CAF50' }] },
+                        { featureType: 'landscape', elementType: 'geometry',   stylers: [{ color: '#1a2e1a' }] },
+                        { featureType: 'poi',     stylers: [{ visibility: 'off' }] },
+                        { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+                    ],
             });
 
             const top5ids = new Set(playersWithDistance.slice(0, 5).map(p => p.id));
