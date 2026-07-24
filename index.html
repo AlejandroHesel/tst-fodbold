@@ -862,13 +862,11 @@
                         });
                     } else {
                         players[id] = {
-                        name,
-                        nickname: p.nickname?.trim() || name.split(' ')[0],
-                        position: p.position?.trim() || '',
-                        number:   p.number?.trim() || '',
-                        image:    p.image?.trim() || '',
-                        address:  p.address?.trim() || '',
-                    };
+                            name,
+                            nickname: p.nickname?.trim() || name.split(' ')[0],
+                            position: p.position?.trim() || '',
+                            number:   p.number?.trim() || '',
+                            image:    p.image?.trim() || '',
                         };
                     }
                 });
@@ -1338,21 +1336,21 @@
             const mapContainer = document.getElementById('carpooling-map');
             mapContainer.innerHTML = '<div class="map-loading">🗺️ Henter adresser...</div>';
 
-            const currentContact = contactData[profileId] || players[profileId];
-                if (!currentContact?.address) {
+            const currentContact = contactData[profileId];
+            if (!currentContact?.address) {
                 mapContainer.innerHTML = '<div class="map-loading">Ingen adresse registreret for denne spiller</div>';
                 return;
             }
 
             // Geocode alle spillere med adresser
             const allPlayers = Object.entries(players)
-                .filter(([id, p]) => contactData[id]?.address || p.address)
-                    .map(([id, p]) => ({
-                        id,
-                        name:     p.name,
-                        nickname: p.nickname,
-                        image:    p.image,
-                        address:  contactData[id]?.address || p.address,
+                .filter(([id]) => contactData[id]?.address)
+                .map(([id, p]) => ({
+                    id,
+                    name:     p.name,
+                    nickname: p.nickname,
+                    image:    p.image,
+                    address:  contactData[id].address,
                 }));
 
             if (allPlayers.length === 0) {
