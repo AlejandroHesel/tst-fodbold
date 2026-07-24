@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TST Fodbold - Rangliste</title>
+    <title>tst Fodbold - Rangliste</title>
     <style>
         :root {
             --primary-color: #1a5c1a;
@@ -598,9 +598,10 @@
     </style>
 </head>
 <body>
+
     <header>
-        <h1>⚽ TST Fodbold</h1>
-        <p>Sæson 2025/2026 · Rangliste</p>
+        <h1>⚽ tst Fodbold</h1>
+        <p>Efterårssæsonen 2026 · Rangliste</p>
     </header>
 
     <div class="tabs">
@@ -1296,24 +1297,16 @@
         // ============================================================
         // SAMKØRSEL OG KORT
         // ============================================================
-                function toggleCarpooling() {
-                    const container = document.getElementById('carpooling-map-container');
-                    const isActive  = container.classList.contains('active');
-                    if (isActive) {
-                        container.classList.remove('active');
-                    } else {
-                        container.classList.add('active');
-                        if (!carpoolingMap) {
-                            if (typeof google === 'undefined') {
-                                document.getElementById('carpooling-map').innerHTML = 
-                                    '<div class="map-loading">⏳ Google Maps loader stadig - prøv igen om et sekund</div>';
-                                setTimeout(() => initCarpoolingMap(currentProfileId), 2000);
-                            } else {
-                                initCarpoolingMap(currentProfileId);
-                            }
-                        }
-                    }
-                }
+        function toggleCarpooling() {
+            const container = document.getElementById('carpooling-map-container');
+            const isActive  = container.classList.contains('active');
+            if (isActive) {
+                container.classList.remove('active');
+            } else {
+                container.classList.add('active');
+                if (!carpoolingMap) initCarpoolingMap(currentProfileId);
+            }
+        }
 
             async function geocodeAddress(address) {
                 if (geocodeCache[address]) return geocodeCache[address];
@@ -1511,6 +1504,6 @@
 
         // Start
         loadAllData();
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y&libraries=geometry,places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y&libraries=geometry,places"></script>
 </body>
 </html>
