@@ -420,6 +420,70 @@
         .match-player-points-score { font-size: 1.4em; font-weight: bold; color: var(--accent-color); }
 
         /* ========================================
+   SAMKØRSEL
+======================================== */
+.carpooling-section { max-width: 800px; margin: 0 auto 20px; padding: 0 20px; }
+.carpooling-section h3 { color: var(--accent-color); font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+.carpooling-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: var(--card-color);
+    border: 2px solid var(--secondary-color);
+    border-radius: 10px;
+    padding: 15px 25px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-color);
+    font-size: 0.85em;
+    margin-bottom: 15px;
+}
+
+.carpooling-button:hover { border-color: var(--accent-color); transform: translateY(-2px); }
+.carpooling-button .car-icon { font-size: 2em; }
+
+.carpooling-map-container { display: none; }
+.carpooling-map-container.active { display: block; }
+
+#carpooling-map {
+    width: 100%;
+    height: 500px;
+    border-radius: 10px;
+    border: 2px solid var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+.nearest-players-list { display: flex; flex-direction: column; gap: 8px; }
+
+.nearest-player-row {
+    background-color: var(--card-color);
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 3px solid var(--accent-color);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nearest-player-row:hover { transform: translateX(5px); }
+.nearest-player-rank { font-size: 1.2em; min-width: 30px; }
+.nearest-player-info { flex: 1; }
+.nearest-player-name { font-weight: bold; }
+.nearest-player-distance { font-size: 0.8em; color: #aaa; margin-top: 2px; }
+.nearest-player-pts { font-size: 0.85em; color: var(--accent-color); }
+
+.map-loading {
+    text-align: center;
+    padding: 20px;
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+        /* ========================================
            SPILLERPROFIL
         ======================================== */
         .player-profile { display: none; }
@@ -561,6 +625,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .error { text-align: center; padding: 20px; color: #f44336; font-size: 0.9em; }
     </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y&libraries=geometry"></script>
 </head>
 <body>
 
@@ -665,7 +730,16 @@
             <h3>📋 Kontaktinfo</h3>
             <div class="profile-contact-box" id="profile-contact"></div>
         </div>
-
+<div class="carpooling-section">
+    <button class="carpooling-button" onclick="toggleCarpooling()">
+        <span class="car-icon">🚗</span>
+        <span>Samkørsel</span>
+    </button>
+    <div class="carpooling-map-container" id="carpooling-map-container">
+        <div id="carpooling-map"></div>
+        <div class="nearest-players-list" id="nearest-players-list"></div>
+    </div>
+</div>
         <div class="profile-section">
             <h3>📅 Seneste kampe</h3>
             <div id="profile-matches"></div>
@@ -1176,6 +1250,9 @@
             if (!player) return;
 
             profileReturnContext = document.querySelector('.tab-content.active')?.id || 'training';
+            currentProfileId = playerId;
+            carpoolingMap = null; // Reset kortet når ny profil åbnes
+            document.getElementById('carpooling-map-container').classList.remove('active');
 
             // Skjul alt andet
             document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
@@ -1301,7 +1378,221 @@
             document.getElementById(viewName).classList.add('active');
             btn.classList.add('active');
         }
+// ============================================================
+// SAMKØRSEL OG KORT
+// ============================================================
+let carpoolingMap = null;
+let currentProfileId = null;
+let geocodeCache = {};
 
+function toggleCarpooling() {
+    const container = document.getElementById('carpooling-map-container');
+    const isActive = container.classList.contains('active');
+
+    if (isActive) {
+        container.classList.remove('active');
+    } else {
+        container.classList.add('active');
+        if (!carpoolingMap) {
+            initCarpoolingMap(currentProfileId);
+        }
+    }
+}
+
+async function geocodeAddress(address) {
+    if (geocodeCache[address]) return geocodeCache[address];
+
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address + ', Aarhus, Denmark')}&key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y`;
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.results && data.results[0]) {
+            const loc = data.results[0].geometry.location;
+            geocodeCache[address] = loc;
+            return loc;
+        }
+    } catch (e) {
+        console.error('Geocode fejl:', e);
+    }
+    return null;
+}
+
+async function getDistances(originAddress, destinations) {
+    const destString = destinations.map(d => encodeURIComponent(d + ', Aarhus, Denmark')).join('|');
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(originAddress + ', Aarhus, Denmark')}&destinations=${destString}&mode=driving&key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y`;
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        return data.rows[0]?.elements || [];
+    } catch (e) {
+        console.error('Distance fejl:', e);
+        return [];
+    }
+}
+
+async function initCarpoolingMap(profileId) {
+    const mapContainer = document.getElementById('carpooling-map');
+    mapContainer.innerHTML = '<div class="map-loading">🗺️ Henter adresser...</div>';
+
+    const currentPlayer = players[profileId];
+    const currentContact = contactData[profileId];
+
+    if (!currentContact?.address) {
+        mapContainer.innerHTML = '<div class="map-loading">Ingen adresse registreret for denne spiller</div>';
+        return;
+    }
+
+    // Geocode alle spillere med adresser
+    const allPlayers = Object.entries(players)
+        .filter(([id]) => contactData[id]?.address)
+        .map(([id, p]) => ({
+            id,
+            name: p.name,
+            nickname: p.nickname,
+            image: p.image,
+            address: contactData[id].address,
+        }));
+
+    if (allPlayers.length === 0) {
+        mapContainer.innerHTML = '<div class="map-loading">Ingen adresser registreret endnu</div>';
+        return;
+    }
+
+    // Geocode alle adresser
+    const geocoded = await Promise.all(
+        allPlayers.map(async p => ({
+            ...p,
+            coords: await geocodeAddress(p.address),
+        }))
+    ).then(results => results.filter(p => p.coords));
+
+    // Hent køreafstande fra nuværende spiller
+    const otherPlayers = geocoded.filter(p => p.id !== profileId);
+    const distances = await getDistances(
+        currentContact.address,
+        otherPlayers.map(p => p.address)
+    );
+
+    // Tilføj afstande
+    const playersWithDistance = otherPlayers.map((p, i) => ({
+        ...p,
+        distance: distances[i]?.distance?.value || Infinity,
+        distanceText: distances[i]?.distance?.text || '?',
+    })).sort((a, b) => a.distance - b.distance);
+
+    // Ryd container og opret kort
+    mapContainer.innerHTML = '';
+
+    // Initialiser Google Maps
+    carpoolingMap = new google.maps.Map(mapContainer, {
+        zoom: 13,
+        center: geocoded.find(p => p.id === profileId)?.coords || { lat: 56.1629, lng: 10.2039 },
+        styles: [
+            { elementType: 'geometry', stylers: [{ color: '#0f3d0f' }] },
+            { elementType: 'labels.text.fill', stylers: [{ color: '#ffffff' }] },
+            { elementType: 'labels.text.stroke', stylers: [{ color: '#0f3d0f' }] },
+            { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#1a5c1a' }] },
+            { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#2d8c2d' }] },
+            { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#9ca5b3' }] },
+            { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0a2a0a' }] },
+            { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+            { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+        ],
+    });
+
+    const top5ids = new Set(playersWithDistance.slice(0, 5).map(p => p.id));
+
+    // Tilføj markers
+    geocoded.forEach(p => {
+        const isSelf    = p.id === profileId;
+        const isNearest = top5ids.has(p.id);
+
+        let markerIcon;
+
+        if (isSelf) {
+            // Fodbold ikon til nuværende spiller
+            markerIcon = {
+                url: 'https://maps.gstatic.com/mapfiles/ms2/micons/soccer.png',
+                scaledSize: new google.maps.Size(40, 40),
+            };
+        } else if (isNearest) {
+            // Større grøn pin til de 5 nærmeste
+            markerIcon = {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 12,
+                fillColor: '#4CAF50',
+                fillOpacity: 1,
+                strokeColor: '#ffffff',
+                strokeWeight: 2,
+            };
+        } else {
+            // Lille mørkegrøn pin til resten
+            markerIcon = {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 7,
+                fillColor: '#1a5c1a',
+                fillOpacity: 1,
+                strokeColor: '#4CAF50',
+                strokeWeight: 1,
+            };
+        }
+
+        const marker = new google.maps.Marker({
+            position: p.coords,
+            map: carpoolingMap,
+            icon: markerIcon,
+            title: p.name,
+        });
+
+        // Hover popup
+        const infoWindow = new google.maps.InfoWindow({
+            content: `
+                <div style="background:#1e1e1e;color:#fff;padding:8px 12px;border-radius:8px;font-family:sans-serif;cursor:pointer" onclick="openProfile('${p.id}')">
+                    <div style="font-weight:bold">${p.name}</div>
+                    ${!isSelf && playersWithDistance.find(pw => pw.id === p.id)
+                        ? `<div style="color:#4CAF50;font-size:0.85em">${playersWithDistance.find(pw => pw.id === p.id).distanceText} væk</div>`
+                        : '<div style="color:#4CAF50;font-size:0.85em">Det er dig!</div>'
+                    }
+                    <div style="color:#aaa;font-size:0.75em;margin-top:4px">Klik for at se profil</div>
+                </div>
+            `,
+        });
+
+        marker.addListener('mouseover', () => infoWindow.open(carpoolingMap, marker));
+        marker.addListener('mouseout', () => infoWindow.close());
+        marker.addListener('click', () => openProfile(p.id));
+    });
+
+    // Byg liste over 5 nærmeste
+    const listContainer = document.getElementById('nearest-players-list');
+    listContainer.innerHTML = '<h3 style="color:var(--accent-color);font-size:0.85em;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">🚗 5 nærmeste spillere</h3>';
+
+    playersWithDistance.slice(0, 5).forEach((p, index) => {
+        const row = document.createElement('div');
+        row.className = 'nearest-player-row';
+        row.onclick = () => openProfile(p.id);
+
+        const avatar = buildAvatarEl(p.image, p.name, 'card-avatar', '36px');
+
+        const infoEl = document.createElement('div');
+        infoEl.className = 'nearest-player-info';
+        infoEl.innerHTML = `
+            <div class="nearest-player-name">${p.name}</div>
+            <div class="nearest-player-distance">🚗 ${p.distanceText} væk</div>
+        `;
+
+        const rankEl = document.createElement('div');
+        rankEl.className = 'nearest-player-rank';
+        rankEl.textContent = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+
+        row.appendChild(rankEl);
+        row.appendChild(avatar);
+        row.appendChild(infoEl);
+        listContainer.appendChild(row);
+    });
+}
         // Start
         loadAllData();
     </script>
