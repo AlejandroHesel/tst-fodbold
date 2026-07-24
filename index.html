@@ -145,33 +145,67 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+.match-card {
+    background-color: var(--card-color);
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Dette sørger for at alt er snorlige */
+    border-left: 4px solid var(--secondary-color);
+    cursor: pointer;
+    transition: all 0.2s;
+}
 
-        .match-card:hover { transform: translateX(5px); border-left-color: var(--accent-color); }
-        .match-card-left { display: flex; flex-direction: column; gap: 4px; }
-        .match-teams { font-size: 1.1em; font-weight: bold; }
-        .match-date { font-size: 0.8em; color: #aaa; }
+.match-card-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1; /* Fylder hele venstre side */
+}
 
-        .match-score {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-align: center;
-            min-width: 80px;
-        }
+.match-teams {
+    font-size: 1.1em;
+    font-weight: bold;
+}
 
-        .match-result {
-            font-size: 0.75em;
-            text-align: center;
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
+.match-date {
+    font-size: 0.8em;
+    color: #aaa;
+}
 
-        .result-win { background-color: #1a5c1a; color: #4CAF50; }
-        .result-loss { background-color: #5c1a1a; color: #f44336; }
-        .result-draw { background-color: #5c4a1a; color: #FFC107; }
-        .match-arrow { color: #aaa; font-size: 1.2em; }
-
+.match-score {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--accent-color);
+    text-align: center;
+    min-width: 80px;
+}
+.match-result {
+    font-size: 0.75em;
+    text-align: center;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    min-width: 80px; /* Ens bredde for alle udfald */
+}
+.result-win {
+    background-color: #1a5c1a;
+    color: #4CAF50;
+}
+.result-loss {
+    background-color: #5c1a1a;
+    color: #f44336;
+}
+.result-draw {
+    background-color: #5c4a1a;
+    color: #FFC107;
+}
+.match-arrow {
+    color: #aaa;
+    font-size: 1.2em;
+}
         .match-detail { display: none; }
         .match-detail.active { display: block; }
 
@@ -991,8 +1025,9 @@
                         <div class="match-date">📅 ${match.weekday} ${match.date}</div>
                     </div>
                     <div class="match-score">${match.homeScore}-${match.awayScore}</div>
-                    <div><div class="match-result ${resultClass}">${resultText}</div></div>
+                    <div class="match-result ${resultClass}">${resultText}</div>
                     <div class="match-arrow">›</div>
+`;
                 `;
                 container.appendChild(card);
             });
