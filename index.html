@@ -1308,30 +1308,38 @@
             }
         }
 
-        async function geocodeAddress(address) {
-            if (geocodeCache[address]) return geocodeCache[address];
-            const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address + ', Aarhus, Denmark')}&key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y`;
-            try {
-                const res  = await fetch(url);
-                const data = await res.json();
-                if (data.results?.[0]) {
-                    const loc = data.results[0].geometry.location;
-                    geocodeCache[address] = loc;
-                    return loc;
-                }
-            } catch (e) { console.error('Geocode fejl:', e); }
-            return null;
-        }
-
-        async function getDistances(originAddress, destinations) {
-            const destString = destinations.map(d => encodeURIComponent(d + ', Aarhus, Denmark')).join('|');
-            const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(originAddress + ', Aarhus, Denmark')}&destinations=${destString}&mode=driving&key=AIzaSyD8ZEJLf-HtP_yicBVZC3eCmO9QavoYK0Y`;
-            try {
-                const res  = await fetch(url);
-                const data = await res.json();
-                return data.rows[0]?.elements || [];
-            } catch (e) { console.error('Distance fejl:', e); return []; }
-        }
+            async function geocodeAddress(address) {
+                if (geocodeCache[address]) return geocodeCache[address];
+                return new Promise((resolve) => {
+                    const geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ address: address + ', Aarhus, Denmark' }, (results, status) => {
+                        if (status === 'OK' && results[0]) {
+                            const loc = results[0].geometry.location;
+                            geocodeCache[address] = { lat: loc.lat(), lng: loc.lng() };
+                            resolve(geocodeCache[address]);
+                        } else {
+                            resolve(null);
+                        }
+                    });
+                });
+            }
+            
+            async function getDistances(originAddress, destPlayers) {
+                return new Promise((resolve) => {
+                    const service = new google.maps.DistanceMatrixService();
+                    service.getDistanceMatrix({
+                        origins:      [originAddress + ', Aarhus, Denmark'],
+                        destinations: destPlayers.map(p => p.address + ', Aarhus, Denmark'),
+                        travelMode:   google.maps.TravelMode.DRIVING,
+                    }, (response, status) => {
+                        if (status === 'OK') {
+                            resolve(response.rows[0].elements);
+                        } else {
+                            resolve(destPlayers.map(() => ({ distance: { value: Infinity, text: '?' } })));
+                        }
+                    });
+                });
+            }
 
         async function initCarpoolingMap(profileId) {
             const mapContainer = document.getElementById('carpooling-map');
@@ -1365,7 +1373,7 @@
 
             // Hent køreafstande
             const otherPlayers  = geocoded.filter(p => p.id !== profileId);
-            const distances     = await getDistances(currentContact.address, otherPlayers.map(p => p.address));
+            const distances = await getDistances(currentContact.address, otherPlayers);
 
             const playersWithDistance = otherPlayers.map((p, i) => ({
                 ...p,
