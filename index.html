@@ -595,6 +595,55 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
         .error { text-align: center; padding: 20px; color: #f44336; font-size: 0.9em; }
+/* TOOLTIP PÅ BANEN */
+.pitch-player { position: relative; }
+
+.pitch-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e1e1e;
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-width: 160px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.pitch-player:hover .pitch-tooltip { display: block; }
+
+.tooltip-name {
+    font-weight: bold;
+    font-size: 0.8em;
+    margin-bottom: 6px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 4px;
+}
+
+.tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.75em;
+    padding: 2px 0;
+    color: #ccc;
+}
+
+.tooltip-pts-pos { color: var(--accent-color); font-weight: bold; }
+.tooltip-pts-neg { color: #f44336; font-weight: bold; }
+.tooltip-total {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 4px;
+    padding-top: 4px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75em;
+    font-weight: bold;
+}  
     </style>
 </head>
 <body>
@@ -1094,40 +1143,78 @@
         // ============================================================
         // BYG BANE-RÆKKE
         // ============================================================
-        function buildPitchRow(playersArr, pointsMap, isSub = false) {
-            const row = document.createElement('div');
-            row.className = 'pitch-row';
+function buildPitchRow(playersArr, pointsMap, matchId, isSub = false) {
+    const row = document.createElement('div');
+    row.className = 'pitch-row';
 
-            playersArr.forEach(({ player_id, name, nickname, image }) => {
-                const pts = pointsMap[name] || 0;
-                const el  = document.createElement('div');
-                el.className = 'pitch-player';
-                el.onclick = () => openProfile(player_id);
+    playersArr.forEach(({ player_id, name, nickname, image }) => {
+        const pts = pointsMap[name] || 0;
+        const el  = document.createElement('div');
+        el.className = 'pitch-player';
+        el.onclick = () => openProfile(player_id);
 
-                const imgWrap = document.createElement('div');
-                imgWrap.className = 'pitch-player-img-wrap';
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'pitch-player-img-wrap';
 
-                const img = buildAvatarEl(image, name, 'pitch-player-img' + (isSub ? ' sub-img' : ''), '44px');
+        const img = buildAvatarEl(image, name, 'pitch-player-img' + (isSub ? ' sub-img' : ''), '44px');
 
-                const ptsBadge = document.createElement('div');
-                ptsBadge.className = 'shirt-points';
-                ptsBadge.textContent = pts;
+        const ptsBadge = document.createElement('div');
+        ptsBadge.className = 'shirt-points';
+        ptsBadge.textContent = pts;
 
-                imgWrap.appendChild(img);
-                imgWrap.appendChild(ptsBadge);
+        imgWrap.appendChild(img);
+        imgWrap.appendChild(ptsBadge);
 
-                const nameEl = document.createElement('div');
-                nameEl.className = 'pitch-player-name';
-                nameEl.textContent = nickname || name.split(' ')[0];
+        const nameEl = document.createElement('div');
+        nameEl.className = 'pitch-player-name';
+        nameEl.textContent = nickname || name.split(' ')[0];
 
-                el.appendChild(imgWrap);
-                el.appendChild(nameEl);
-                row.appendChild(el);
+        // TOOLTIP
+        const tooltip = document.createElement('div');
+        tooltip.className = 'pitch-tooltip';
+
+        const details = matchPointDetails.filter(
+            d => d.match_id === matchId && d.player_id === player_id
+        );
+
+        const tooltipName = document.createElement('div');
+        tooltipName.className = 'tooltip-name';
+        tooltipName.textContent = name;
+        tooltip.appendChild(tooltipName);
+
+        if (details.length) {
+            let total = 0;
+            details.forEach(d => {
+                total += d.points;
+                const row = document.createElement('div');
+                row.className = 'tooltip-row';
+                const ptsClass = d.points >= 0 ? 'tooltip-pts-pos' : 'tooltip-pts-neg';
+                row.innerHTML = `
+                    <span>${d.category}</span>
+                    <span class="${ptsClass}">${d.points > 0 ? '+' : ''}${d.points}p</span>
+                `;
+                tooltip.appendChild(row);
             });
 
-            return row;
+            const totalRow = document.createElement('div');
+            totalRow.className = 'tooltip-total';
+            totalRow.innerHTML = `
+                <span>Total</span>
+                <span class="tooltip-pts-pos">${total > 0 ? '+' : ''}${total}p</span>
+            `;
+            tooltip.appendChild(totalRow);
+        } else {
+            tooltip.innerHTML += '<div style="color:#aaa;font-size:0.75em">Ingen pointdetaljer</div>';
         }
 
+        el.appendChild(imgWrap);
+        el.appendChild(nameEl);
+        el.appendChild(tooltip);
+        row.appendChild(el);
+    });
+
+    return row;
+}
         // ============================================================
         // ÅBEN KAMP DETALJE
         // ============================================================
@@ -1175,14 +1262,14 @@
                 [...getPos('left_back'), ...getPos('centerback'), ...getPos('right_back')],
                 getPos('goalkeeper'),
             ];
-            rows.forEach(row => { if (row.length > 0) pitch.appendChild(buildPitchRow(row, pointsMap)); });
+          rows.forEach(row => { if (row.length > 0) pitch.appendChild(buildPitchRow(row, pointsMap, matchId)); });
 
             // Indskiftere
             const subs = getPos('substitute');
             const subsContainer = document.getElementById('detail-subs');
             subsContainer.innerHTML = '';
             if (subs.length) {
-                const subRow = buildPitchRow(subs, pointsMap, true);
+                const subRow = buildPitchRow(subs, pointsMap, matchId, true);
                 Array.from(subRow.children).forEach(child => subsContainer.appendChild(child));
             }
 
@@ -1273,19 +1360,19 @@
                 matchesContainer.innerHTML = '<div style="color:#aaa;font-size:0.85em;padding:10px 0">Ingen kampe endnu</div>';
             } else {
                 playerMatchPts.forEach(mp => {
-                    const match = matchHistory.find(m => m.id === mp.match_id);
-                    if (!match) return;
-                    const row = document.createElement('div');
-                    row.className = 'profile-match-row';
-                    row.innerHTML = `
-                        <div>
-                            <div class="profile-match-name">${match.homeTeam} vs ${match.awayTeam}</div>
-                            <div class="profile-match-date">${match.weekday} ${match.date}</div>
-                        </div>
-                        <div class="profile-match-pts">+${mp.points}p</div>
-                    `;
-                    matchesContainer.appendChild(row);
-                });
+                const match = matchHistory.find(m => m.id === mp.match_id);
+                if (!match) return;
+                const row = document.createElement('div');
+                row.className = 'profile-match-row';
+                row.innerHTML = `
+                    <div>
+                        <div class="profile-match-name">${match.homeTeam} vs ${match.awayTeam}</div>
+                        <div class="profile-match-date">${match.weekday} ${match.date}</div>
+                    </div>
+                    <div class="profile-match-pts">+${mp.points}p</div>
+                `;
+                matchesContainer.appendChild(row);
+            });
             }
         }
 
