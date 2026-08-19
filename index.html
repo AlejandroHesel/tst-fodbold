@@ -818,7 +818,7 @@
         let matchData    = [];
         let matchHistory = [];
         let matchLineups = [];
-        let matchPoints  = [];
+        let matchPointDetails  = [];
         let profileReturnContext = null;
         let currentProfileId     = null;
         let carpoolingMap        = null;
@@ -998,7 +998,19 @@
                     });
                     matchData = Object.values(totals).sort((a, b) => b.points - a.points);
                 }
-
+                
+                // 6. Match point detaljer
+                try {
+                    const detailsRaw = await fetchSheet(SHEET_ID, 'match_point_details');
+                    matchPointDetails = detailsRaw.map(row => ({
+                        match_id:  row.match_id?.trim(),
+                        player_id: row.player_id?.trim(),
+                        category:  row.category?.trim(),
+                        points:    parseFloat(row.points) || 0,
+                    }));
+                } catch (e) {
+                    console.log('match_point_details ikke tilgængelig endnu');
+                }
                 // 6. Kontaktdata
                 try {
                     const contactRaw = await fetchSheet(CONTACT_SHEET_ID, 'contact');
