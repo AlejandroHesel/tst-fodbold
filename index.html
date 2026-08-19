@@ -311,7 +311,20 @@
             justify-content: center;
         }
 
-        .pitch-player-name { font-size: 0.65em; color: #ccc; text-align: center; background: rgba(0,0,0,0.5); padding: 2px 4px; border-radius: 3px; }
+        .pitch-player-name {
+            font-size: 0.65em;
+            text-align: center;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+            max-width: 65px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 4px;
+            border-radius: 3px;
+            width: 100%;
+            display: block;
         }
 
         .coaches-section { max-width: 500px; margin: 0 auto 10px; padding: 0 20px; }
@@ -953,12 +966,13 @@
                 });
 
                 // 5. Match points
-                const pointsRaw = await fetchSheet(SHEET_ID, 'match_points');
-                if (pointsRaw.length > 0) {
-                    const headers   = Object.keys(pointsRaw[0]);
-                    const matchCols = headers.slice(2);
+               const pointsRaw = await fetchSheet(SHEET_ID, 'match_points');
+                const pointsFiltered = pointsRaw.filter(row => row.player_id?.trim() !== '');
+                if (pointsFiltered.length > 0) {
+                const headers   = Object.keys(pointsFiltered[0]);
+                const matchCols = headers.slice(2);
 
-                    pointsRaw.forEach(row => {
+                pointsFiltered.forEach(row => {
                         const pid = row.player_id?.trim();
                         if (!pid || !players[pid]) return;
                         matchCols.forEach((col, i) => {
@@ -975,8 +989,8 @@
                         });
                     });
 
-                    const totals = {};
-                    pointsRaw.forEach(row => {
+                        const totals = {};
+                        pointsFiltered.forEach(row => {
                         const pid = row.player_id?.trim();
                         if (!pid || !players[pid]) return;
                         totals[pid] = {
