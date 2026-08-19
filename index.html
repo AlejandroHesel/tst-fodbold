@@ -229,7 +229,7 @@
             border: 2px solid rgba(255,255,255,0.3);
             padding: 20px 10px;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .pitch::before {
@@ -311,18 +311,7 @@
             justify-content: center;
         }
 
-        .pitch-player-name {
-            font-size: 0.65em;
-            text-align: center;
-            color: #fff;
-            text-shadow: 1px 1px 2px #000;
-            max-width: 65px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            background: rgba(0,0,0,0.5);
-            padding: 2px 4px;
-            border-radius: 3px;
+        .pitch-player-name { font-size: 0.65em; color: #ccc; text-align: center; background: rgba(0,0,0,0.5); padding: 2px 4px; border-radius: 3px; }
         }
 
         .coaches-section { max-width: 500px; margin: 0 auto 10px; padding: 0 20px; }
@@ -1161,7 +1150,7 @@ function buildPitchRow(playersArr, pointsMap, matchId, isSub = false) {
     row.className = 'pitch-row';
 
     playersArr.forEach(({ player_id, name, nickname, image }) => {
-        const pts = pointsMap[name] || 0;
+        const pts = pointsMap[player_id] || 0;
         const el  = document.createElement('div');
         el.className = 'pitch-player';
         el.onclick = () => openProfile(player_id);
@@ -1242,9 +1231,9 @@ function buildPitchRow(playersArr, pointsMap, matchId, isSub = false) {
             document.getElementById('detail-teams').textContent = `${match.homeTeam} vs ${match.awayTeam}`;
             document.getElementById('detail-score').textContent = `${match.homeScore} - ${match.awayScore}`;
             document.getElementById('detail-date').textContent  = `📅 ${match.weekday} ${match.date}`;
-
+            
             const pointsMap = {};
-            matchPoints.filter(p => p.match_id === matchId).forEach(p => { pointsMap[p.name] = p.points; });
+            matchPoints.filter(p => p.match_id === matchId).forEach(p => { pointsMap[p.player_id] = p.points; });
 
             const lineup = matchLineups.filter(l => l.match_id === matchId);
             const getPos = pos => lineup.filter(l => l.position === pos);
