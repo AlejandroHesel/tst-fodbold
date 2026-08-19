@@ -265,7 +265,7 @@
         }
 
         .pitch-row:last-child { margin-bottom: 0; }
-
+    
         .pitch-player {
             display: flex;
             flex-direction: column;
@@ -1047,11 +1047,23 @@
                 container.appendChild(card);
             });
         }
-
         // ============================================================
-        // BYGG KAMPHISTORIK
+        // BEREGN RESULTAT FRA TST'S PERSPEKTIV
         // ============================================================
-        function buildMatchHistory() {
+            function getTstResult(match) {
+            const tstIsHome = match.homeTeam.toLowerCase().includes('tst');
+            const tstScore  = tstIsHome ? match.homeScore : match.awayScore;
+            const oppScore  = tstIsHome ? match.awayScore : match.homeScore;
+            const diff      = tstScore - oppScore;
+            return {
+                resultClass: diff > 0 ? 'result-win' : diff < 0 ? 'result-loss' : 'result-draw',
+                resultText:  diff > 0 ? 'SEJR'       : diff < 0 ? 'NEDERLAG'    : 'UAFGJORT',
+            };
+        }
+        // ============================================================
+        // BYG KAMPHISTORIK
+        // ============================================================
+            function buildMatchHistory() {
             const container = document.getElementById('match-history-list');
             container.innerHTML = '';
 
@@ -1061,9 +1073,7 @@
             }
 
             matchHistory.forEach(match => {
-                const diff        = match.homeScore - match.awayScore;
-                const resultClass = diff > 0 ? 'result-win' : diff < 0 ? 'result-loss' : 'result-draw';
-                const resultText  = diff > 0 ? 'SEJR' : diff < 0 ? 'NEDERLAG' : 'UAFGJORT';
+                const { resultClass, resultText } = getTstResult(match);
 
                 const card = document.createElement('div');
                 card.className = 'match-card';
@@ -1082,7 +1092,7 @@
         }
 
         // ============================================================
-        // BYGG BANE-RÆKKE
+        // BYG BANE-RÆKKE
         // ============================================================
         function buildPitchRow(playersArr, pointsMap, isSub = false) {
             const row = document.createElement('div');
