@@ -940,7 +940,7 @@
                 // 3. Matches
                 const matchesRaw = await fetchSheet(SHEET_ID, 'matches');
                 matchHistory = matchesRaw.map(row => ({
-                    id:        row.id?.trim(),
+                    id:        row.match_id?.trim(),
                     homeTeam:  row.home_team?.trim(),
                     awayTeam:  row.away_team?.trim(),
                     homeScore: parseInt(row.home_score) || 0,
